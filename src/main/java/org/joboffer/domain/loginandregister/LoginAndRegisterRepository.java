@@ -1,6 +1,6 @@
 package org.joboffer.domain.loginandregister;
 
-import java.util.List;
+import java.util.Map;
 
 interface LoginAndRegisterRepository {
 
@@ -8,5 +8,5 @@ interface LoginAndRegisterRepository {
 
     User save(User user);
 
-    List<User> findAll();
+    Map<String, User> findAll();
 }

@@ -1,20 +1,19 @@
 package org.joboffer.domain.loginandregister;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class LoginAndRegisterRepositoryImpl implements LoginAndRegisterRepository {
 
-    private List<User> users = new ArrayList<>();
+    private final Map<String, User> users = new HashMap<>();
 
     @Override
-    public List<User> findAll() {
+    public Map<String, User> findAll() {
         return users;
     }
 
     @Override
     public User findByUsername(String username) {
-        return users.stream()
+        return users.values().stream()
                 .filter(user -> user.getUsername().equals(username))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
@@ -28,7 +27,7 @@ class LoginAndRegisterRepositoryImpl implements LoginAndRegisterRepository {
         if (isUserExistsWithSameId(user.getId())) {
             throw new IllegalArgumentException("User already exists");
         }
-        users.add(user);
+        users.put(user.getId(), user);
         return user;
     }
 
@@ -36,8 +35,8 @@ class LoginAndRegisterRepositoryImpl implements LoginAndRegisterRepository {
         return user.getId() == null;
     }
 
-    private boolean isUserExistsWithSameId(Long userId) {
-        return users.stream()
-                .anyMatch(user -> user.getId().equals(userId));
+    private boolean isUserExistsWithSameId(String userId) {
+        return users.keySet().stream()
+                .anyMatch(id -> id.equals(userId));
     }
 }
