@@ -1,41 +1,54 @@
 package org.joboffer.domain.loginandregister;
 
-import java.util.*;
+import lombok.AllArgsConstructor;
+import org.joboffer.domain.loginandregister.dto.UserDto;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.joboffer.domain.loginandregister.UserDtoMapper.mapToUser;
+import static org.joboffer.domain.loginandregister.UserDtoMapper.mapToUserDto;
+
+@AllArgsConstructor
 class LoginAndRegisterRepositoryImpl implements LoginAndRegisterRepository {
 
     private final Map<String, User> users = new HashMap<>();
 
     @Override
-    public Map<String, User> findAll() {
-        return users;
+    public List<UserDto> findAll() {
+        return users.values().stream()
+                .map(UserDtoMapper::mapToUserDto)
+                .toList();
     }
 
     @Override
-    public User findByUsername(String username) {
+    public UserDto findByUsername(String username) {
         return users.values().stream()
                 .filter(user -> user.getUsername().equals(username))
+                .map(UserDtoMapper::mapToUserDto)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
-    public User save(User user) {
-        if (checkingIsUserIdIsNotNull(user)) {
+    public UserDto save(UserDto userDto) {
+        if (checkingIsUserIdIsNull(userDto)) {
             throw new IllegalArgumentException("User must have an id");
         }
-        if (isUserExistsWithSameId(user.getId())) {
+        if (checkingIsUserWithTheSameIdExist(userDto.getId())) {
             throw new IllegalArgumentException("User already exists");
         }
+        User user = mapToUser(userDto);
         users.put(user.getId(), user);
-        return user;
+        return mapToUserDto(user);
     }
 
-    private static boolean checkingIsUserIdIsNotNull(User user) {
-        return user.getId() == null;
+    private boolean checkingIsUserIdIsNull(UserDto userDto) {
+        return userDto.getId() == null;
     }
 
-    private boolean isUserExistsWithSameId(String userId) {
+    private boolean checkingIsUserWithTheSameIdExist(String userId) {
         return users.keySet().stream()
                 .anyMatch(id -> id.equals(userId));
     }

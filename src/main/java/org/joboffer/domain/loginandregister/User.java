@@ -6,8 +6,10 @@ import lombok.*;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 class User {
-    private final String id;
-    private final String username;
-    private final String password;
+    private String id;
+    private String username;
+    private String password;
 }

@@ -1,15 +1,15 @@
 package org.joboffer.domain.loginandregister.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-class UserDto {
-    private final String username;
-    private final String password;
+@NoArgsConstructor
+@Data
+public class UserDto {
+    private String id;
+    private String username;
+    private String password;
 }

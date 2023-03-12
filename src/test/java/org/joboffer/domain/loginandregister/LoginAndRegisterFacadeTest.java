@@ -1,11 +1,12 @@
 package org.joboffer.domain.loginandregister;
 
-import org.assertj.core.api.Assertions;
+import org.joboffer.domain.loginandregister.dto.UserDto;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+import static org.joboffer.domain.loginandregister.UserDtoMapper.mapToUserDto;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LoginAndRegisterFacadeTest {
@@ -19,10 +20,11 @@ class LoginAndRegisterFacadeTest {
         User user = new User("1L", "John", "Doe");
 
         //when
-        loginAndRegisterFacade.register(user);
+        UserDto userDto = mapToUserDto(user);
+        loginAndRegisterFacade.register(userDto);
 
         //then
-        Map<String, User> users = repository.findAll();
+        List<UserDto> users = loginAndRegisterFacade.findAllUsers();
         assertThat(users).hasSize(1);
     }
 
@@ -32,8 +34,11 @@ class LoginAndRegisterFacadeTest {
         User user = new User(null, "John", "Doe");
 
         //when
+        UserDto userDto = mapToUserDto(user);
+
         //then
-        assertThrows(IllegalArgumentException.class, () -> loginAndRegisterFacade.register(user));
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> loginAndRegisterFacade.register(userDto)).withMessage("User must have an id");
 
     }
 
@@ -44,24 +49,30 @@ class LoginAndRegisterFacadeTest {
         User user2 = new User("1L", "Luke", "Skywalker");
 
         //when
-        loginAndRegisterFacade.register(user1);
+        UserDto userDto1 = mapToUserDto(user1);
+        UserDto userDto2 = mapToUserDto(user2);
 
         //then
-        assertThrows(IllegalArgumentException.class, () -> loginAndRegisterFacade.register(user2));
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> {
+                    loginAndRegisterFacade.register(userDto1);
+                    loginAndRegisterFacade.register(userDto2);
+                }).withMessage("User already exists");
 
     }
 
     @Test
-    void should_find_user_by_user_name_when_user_exist() {
+    void should_find_user_by_username_when_user_exist() {
         //given
         User user = new User("1L", "John", "Doe");
 
         //when
-        loginAndRegisterFacade.register(user);
-        User existingUser = loginAndRegisterFacade.findUserByUserName("John");
+        UserDto userDto = mapToUserDto(user);
+        loginAndRegisterFacade.register(userDto);
+        UserDto existingUser = loginAndRegisterFacade.findUserByUserName("John");
 
         //then
-        Assertions.assertThat(existingUser.getUsername()).isEqualTo(user.getUsername());
+        assertThat(existingUser.getUsername()).isEqualTo(user.getUsername());
     }
 
     @Test
@@ -71,11 +82,11 @@ class LoginAndRegisterFacadeTest {
         User user = new User("1L", "John", "Doe");
 
         //when
-        loginAndRegisterFacade.register(user);
+        UserDto userDto = mapToUserDto(user);
+        loginAndRegisterFacade.register(userDto);
 
         //then
-        assertThrows(IllegalArgumentException.class,
-                () -> loginAndRegisterFacade.findUserByUserName(searchUserName));
+        assertThrows(IllegalArgumentException.class, () -> loginAndRegisterFacade.findUserByUserName(searchUserName));
 
     }
 }

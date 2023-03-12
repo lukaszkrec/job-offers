@@ -1,12 +1,14 @@
 package org.joboffer.domain.loginandregister;
 
-import java.util.Map;
+import org.joboffer.domain.loginandregister.dto.UserDto;
+
+import java.util.List;
 
 interface LoginAndRegisterRepository {
 
-    User findByUsername(String username);
+    UserDto findByUsername(String username);
 
-    User save(User user);
+    UserDto save(UserDto userDto);
 
-    Map<String, User> findAll();
+    List<UserDto> findAll();
 }
