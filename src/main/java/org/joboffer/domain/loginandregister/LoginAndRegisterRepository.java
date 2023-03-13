@@ -7,9 +7,9 @@ import java.util.List;
 interface LoginAndRegisterRepository {
 
 
-    UserDto findByUsername(String username);
+    User findByUsername(String username);
 
-    UserDto save(UserDto userDto);
+    User save(User user);
 
-    List<UserDto> findAll();
+    List<User> findAll();
 }

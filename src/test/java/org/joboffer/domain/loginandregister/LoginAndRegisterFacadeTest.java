@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LoginAndRegisterFacadeTest {
 
-    private final LoginAndRegisterRepositoryTestImpl repository = new LoginAndRegisterRepositoryTestImpl();
+    private final LoginAndRegisterRepository repository = new LoginAndRegisterRepositoryTestImpl();
     private final LoginAndRegisterFacade loginAndRegisterFacade = new LoginAndRegisterFacade(repository);
 
     @Test
@@ -57,7 +57,7 @@ class LoginAndRegisterFacadeTest {
                 .isThrownBy(() -> {
                     loginAndRegisterFacade.register(userDto1);
                     loginAndRegisterFacade.register(userDto2);
-                }).withMessage("User already exists");
+                }).withMessage("User with id " + userDto2.getId() + " already exists");
 
     }
 

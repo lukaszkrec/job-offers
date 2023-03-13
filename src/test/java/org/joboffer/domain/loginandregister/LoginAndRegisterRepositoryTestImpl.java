@@ -16,36 +16,33 @@ class LoginAndRegisterRepositoryTestImpl implements LoginAndRegisterRepository {
     private final Map<String, User> users = new HashMap<>();
 
     @Override
-    public List<UserDto> findAll() {
+    public List<User> findAll() {
         return users.values().stream()
-                .map(UserDtoMapper::mapToUserDto)
                 .toList();
     }
 
     @Override
-    public UserDto findByUsername(String username) {
+    public User findByUsername(String username) {
         return users.values().stream()
                 .filter(user -> user.getUsername().equals(username))
-                .map(UserDtoMapper::mapToUserDto)
                 .findFirst()
                 .orElseThrow(() -> new UserDoesNotExistException("User with username " + username + " does not exist"));
     }
 
     @Override
-    public UserDto save(UserDto userDto) {
-        if (userIdIsNull(userDto)) {
+    public User save(User user) {
+        if (userIdIsNull(user)) {
             throw new IllegalArgumentException("User must have an id");
         }
-        if (userWithTheSameIdExist(userDto.getId())) {
-            throw new UserAlreadyExistException("User with id " + userDto.getId() + " already exists");
+        if (userWithTheSameIdExist(user.getId())) {
+            throw new UserAlreadyExistException("User with id " + user.getId() + " already exists");
         }
-        User user = mapToUser(userDto);
         users.put(user.getId(), user);
-        return mapToUserDto(user);
+        return user;
     }
 
-    private boolean userIdIsNull(UserDto userDto) {
-        return userDto.getId() == null;
+    private boolean userIdIsNull(User user) {
+        return user.getId() == null;
     }
 
     private boolean userWithTheSameIdExist(String userId) {
