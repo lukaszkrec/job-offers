@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class LoginAndRegisterFacadeTest {
 
     private final LoginAndRegisterRepository repository = new LoginAndRegisterRepositoryTestImpl();
-    private final LoginAndRegisterFacade loginAndRegisterFacade = new LoginAndRegisterFacade(repository);
+    private final LoginAndRegisterValidation validation = new LoginAndRegisterValidation(repository);
+    private final LoginAndRegisterFacade loginAndRegisterFacade = new LoginAndRegisterFacade(repository, validation);
 
     @Test
     void should_register_when_user_data_is_correct() {
