@@ -12,6 +12,7 @@ import static org.joboffer.domain.loginandregister.UserDtoMapper.mapToUserDto;
 public class LoginAndRegisterFacade {
 
     private final LoginAndRegisterRepository repository;
+    private final LoginAndRegisterValidation validation;
 
 
     public List<UserDto> findAllUsers() {
@@ -31,24 +32,12 @@ public class LoginAndRegisterFacade {
 
 
     public UserDto register(UserDto userDto) {
-        if (userIdIsNull(userDto)) {
-            throw new IllegalArgumentException("User must have an id");
-        }
-        if (userWithTheSameIdExist(userDto.getId())) {
-            throw new UserAlreadyExistException("User with id " + userDto.getId() + " already exists");
-        }
+        validation.checkingIfUserIdIsNull(userDto);
+        validation.checkingIfUserWithTheSameIdExist(userDto);
         User user = mapToUser(userDto);
         User savedUser = repository.save(user);
         return mapToUserDto(savedUser);
     }
 
-    private boolean userIdIsNull(UserDto userDto) {
-        return userDto.getId() == null;
-    }
-
-    private boolean userWithTheSameIdExist(String userId) {
-        return repository.findAll().stream()
-                .anyMatch(user -> user.getId().equals(userId));
-    }
 
 }
