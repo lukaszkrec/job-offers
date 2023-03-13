@@ -2,12 +2,8 @@ package org.joboffer.domain.loginandregister;
 
 import lombok.*;
 
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
+@Builder
 class User {
     private String id;
     private String username;

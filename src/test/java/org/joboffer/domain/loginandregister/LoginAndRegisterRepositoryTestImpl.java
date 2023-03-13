@@ -11,7 +11,7 @@ import static org.joboffer.domain.loginandregister.UserDtoMapper.mapToUser;
 import static org.joboffer.domain.loginandregister.UserDtoMapper.mapToUserDto;
 
 @AllArgsConstructor
-class LoginAndRegisterRepositoryImpl implements LoginAndRegisterRepository {
+class LoginAndRegisterRepositoryTestImpl implements LoginAndRegisterRepository {
 
     private final Map<String, User> users = new HashMap<>();
 
@@ -28,27 +28,27 @@ class LoginAndRegisterRepositoryImpl implements LoginAndRegisterRepository {
                 .filter(user -> user.getUsername().equals(username))
                 .map(UserDtoMapper::mapToUserDto)
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new UserDoesNotExistException("User with username " + username + " does not exist"));
     }
 
     @Override
     public UserDto save(UserDto userDto) {
-        if (checkingIsUserIdIsNull(userDto)) {
+        if (userIdIsNull(userDto)) {
             throw new IllegalArgumentException("User must have an id");
         }
-        if (checkingIsUserWithTheSameIdExist(userDto.getId())) {
-            throw new IllegalArgumentException("User already exists");
+        if (userWithTheSameIdExist(userDto.getId())) {
+            throw new UserAlreadyExistException("User with id " + userDto.getId() + " already exists");
         }
         User user = mapToUser(userDto);
         users.put(user.getId(), user);
         return mapToUserDto(user);
     }
 
-    private boolean checkingIsUserIdIsNull(UserDto userDto) {
+    private boolean userIdIsNull(UserDto userDto) {
         return userDto.getId() == null;
     }
 
-    private boolean checkingIsUserWithTheSameIdExist(String userId) {
+    private boolean userWithTheSameIdExist(String userId) {
         return users.keySet().stream()
                 .anyMatch(id -> id.equals(userId));
     }

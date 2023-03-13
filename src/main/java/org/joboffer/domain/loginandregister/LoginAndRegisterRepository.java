@@ -6,6 +6,7 @@ import java.util.List;
 
 interface LoginAndRegisterRepository {
 
+
     UserDto findByUsername(String username);
 
     UserDto save(UserDto userDto);
