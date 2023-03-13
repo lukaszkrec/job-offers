@@ -1,10 +1,11 @@
 package org.joboffer.domain.offer;
 
+import java.util.List;
 import java.util.Map;
 
 interface OfferRepository {
 
-    Map<String, Offer> findAllOffers();
+    List<Offer> findAllOffers();
 
     Offer findOfferById(String id);
 
