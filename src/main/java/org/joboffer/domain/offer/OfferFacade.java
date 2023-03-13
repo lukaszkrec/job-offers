@@ -11,6 +11,7 @@ import static org.joboffer.domain.offer.OfferMapper.mapToOfferDto;
 public class OfferFacade {
 
     private final OfferRepository repository;
+    private final OfferValidation offerValidation;
 
     public List<OfferDto> findAllOffers() {
         return repository.findAllOffers().stream()
@@ -20,21 +21,15 @@ public class OfferFacade {
 
 
     public OfferDto findOfferById(String offerId) {
-        if (offerWithIdDoesNotExist(offerId)) {
-            throw new OfferDoesNotExist("Offer with id " + offerId + " does not exist");
-        }
+        offerValidation.checkingIfOfferWithIdDoesExist(offerId);
         Offer offer = repository.findOfferById(offerId);
         return mapToOfferDto(offer);
     }
 
 
     public OfferDto save(Offer savedOffer) {
-        if (offerIdIsNotNull(savedOffer)) {
-            throw new IllegalArgumentException("Offer must have an id");
-        }
-        if (offerExistsWithSameId(savedOffer.getId())) {
-            throw new OfferAlreadyExistException("Offer with id " + savedOffer.getId() + " already exists");
-        }
+        offerValidation.checkingIfTheOfferIdIsNotNull(savedOffer);
+        offerValidation.checkingIfAnOfferWithTheSameIdExist(savedOffer);
         Offer offer = repository.save(savedOffer);
         return mapToOfferDto(offer);
 
@@ -44,24 +39,7 @@ public class OfferFacade {
     public void fetchAllOffersAndSaveAllIfNotExist(List<OfferDto> offerDtos) {
         offerDtos.stream()
                 .map(OfferMapper::mapOffer)
-                .filter(this::offerDoesNotExists)
+                .filter(offerValidation::offerDoesNotExists)
                 .forEach(repository::save);
-    }
-
-    private boolean offerIdIsNotNull(Offer offer) {
-        return offer.getId() == null;
-    }
-
-    private boolean offerExistsWithSameId(String offerId) {
-        return repository.findAllOffers().stream()
-                .anyMatch(offerDto -> offerDto.getId().equals(offerId));
-    }
-
-    private boolean offerWithIdDoesNotExist(String offerId) {
-        return !repository.findAllOffers().contains(repository.findOfferById(offerId));
-    }
-
-    private boolean offerDoesNotExists(Offer offer) {
-        return !repository.findAllOffers().contains(offer);
     }
 }
