@@ -1,44 +1,37 @@
 package org.joboffer.domain.offer;
 
 import lombok.AllArgsConstructor;
+import org.joboffer.domain.offer.dto.OfferDto;
 
 @AllArgsConstructor
 class OfferValidation {
 
     private final OfferRepository repository;
 
-    boolean offerIdIsNotNull(Offer offer) {
-        return offer.getId() == null;
+    boolean checkingIfOfferIdIsNull(OfferDto offerDto) {
+        return offerDto.getId() == null;
     }
 
-    boolean offerExistsWithSameId(String offerId) {
-        return repository.findAllOffers().stream()
+    boolean checkingIfOfferExistsWithSameId(String offerId) {
+        return repository.findAllOffers()
+                .stream()
                 .anyMatch(offerDto -> offerDto.getId().equals(offerId));
     }
 
-    boolean offerWithIdDoesNotExist(String offerId) {
-        return !repository.findAllOffers().contains(repository.findOfferById(offerId));
-    }
-
-    boolean offerDoesNotExists(Offer offer) {
+    boolean checkingIfOfferDoesNotExists(Offer offer) {
         return !repository.findAllOffers().contains(offer);
     }
 
-    void checkingIfAnOfferWithTheSameIdExist(Offer savedOffer) {
-        if (offerExistsWithSameId(savedOffer.getId())) {
-            throw new OfferAlreadyExistException("Offer with id " + savedOffer.getId() + " already exists");
-        }
+    boolean checkingIfOffersWithGivenUrlAlreadyExist(OfferDto offerDto) {
+        return repository.findAllOffers()
+                .stream()
+                .anyMatch(filteredOffer -> filteredOffer.getUrl().equals(offerDto.getUrl()));
     }
 
-    void checkingIfTheOfferIdIsNotNull(Offer savedOffer) {
-        if (offerIdIsNotNull(savedOffer)) {
-            throw new IllegalArgumentException("Offer must have an id");
-        }
-    }
 
-    void checkingIfOfferWithIdDoesExist(String offerId) {
-        if (offerWithIdDoesNotExist(offerId)) {
-            throw new OfferDoesNotExist("Offer with id " + offerId + " does not exist");
-        }
+    boolean checkingIfOfferWithGivenIdExist(Offer serchedOffer) {
+        return repository.findAllOffers()
+                .stream()
+                .anyMatch(offer -> offer.getId().equals(serchedOffer.getId()));
     }
 }
