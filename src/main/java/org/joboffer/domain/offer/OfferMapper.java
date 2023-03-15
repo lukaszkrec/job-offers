@@ -1,7 +1,12 @@
 package org.joboffer.domain.offer;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.joboffer.domain.offer.dto.OfferDto;
 
+import java.util.List;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class OfferMapper {
 
     static OfferDto mapToOfferDto(Offer offer) {
@@ -14,7 +19,7 @@ class OfferMapper {
                 .build();
     }
 
-    static Offer mapOffer(OfferDto dto) {
+    static Offer mapToOffer(OfferDto dto) {
         return Offer.builder()
                 .id(dto.getId())
                 .url(dto.getUrl())
@@ -24,4 +29,15 @@ class OfferMapper {
                 .build();
     }
 
+    static List<OfferDto> mapFetchedOfferToOfferDto(List<Offer> offers) {
+        return offers.stream()
+                .map(OfferMapper::mapToOfferDto)
+                .toList();
+    }
+
+    static List<Offer> mapFetchedOfferDtoToOffer(List<OfferDto> offers) {
+        return offers.stream()
+                .map(OfferMapper::mapToOffer)
+                .toList();
+    }
 }

@@ -1,15 +1,16 @@
 package org.joboffer.domain.offer;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 interface OfferRepository {
 
     List<Offer> findAllOffers();
 
-    Offer findOfferById(String id);
+    Optional<Offer> findOfferById(String id);
 
     Offer save(Offer offer);
 
-    void fetchAllOffersAndSaveAllIfNotExist(Map<String, Offer> offers);
+    List<Offer> fetchAllOffersAndSaveAllIfNotExist(List<Offer> offers);
+
 }
