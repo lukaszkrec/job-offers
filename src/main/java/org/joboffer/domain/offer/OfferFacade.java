@@ -5,13 +5,27 @@ import org.joboffer.domain.offer.dto.OfferDto;
 
 import java.util.List;
 
-import static org.joboffer.domain.offer.OfferMapper.mapToOfferDto;
+import static org.joboffer.domain.offer.OfferMapper.mapToOffer;
 
 @AllArgsConstructor
 public class OfferFacade {
 
     private final OfferRepository repository;
     private final OfferValidation offerValidation;
+
+    public Offer register(OfferDto offer) {
+        if (offerValidation.checkingIfOfferIdIsNull(offer)) {
+            throw new OfferParametersCredentialException("Offer id can not be: " + null);
+        }
+        if (offerValidation.checkingIfOfferExistsWithSameId(offer.getId())) {
+            throw new OfferParametersCredentialException("Offer with id: " + offer.getId() + " already exists");
+        }
+        if (offerValidation.checkingIfOffersWithGivenUrlAlreadyExist(offer)) {
+            throw new DuplicatedKeyException("Offer with the same url: " + offer.getUrl() + " already exists");
+        }
+        Offer mappedOffer = mapToOffer(offer);
+        return repository.save(mappedOffer);
+    }
 
     public List<OfferDto> findAllOffers() {
         return repository.findAllOffers().stream()
@@ -21,25 +35,19 @@ public class OfferFacade {
 
 
     public OfferDto findOfferById(String offerId) {
-        offerValidation.checkingIfOfferWithIdDoesExist(offerId);
-        Offer offer = repository.findOfferById(offerId);
-        return mapToOfferDto(offer);
+        return repository.findOfferById(offerId)
+                .filter(offerValidation::checkingIfOfferWithGivenIdExist)
+                .map(OfferMapper::mapToOfferDto)
+                .orElseThrow(() -> new OfferNotFoundException("Offer with id: " + offerId + " does not exist"));
     }
 
 
-    public OfferDto save(Offer savedOffer) {
-        offerValidation.checkingIfTheOfferIdIsNotNull(savedOffer);
-        offerValidation.checkingIfAnOfferWithTheSameIdExist(savedOffer);
-        Offer offer = repository.save(savedOffer);
-        return mapToOfferDto(offer);
+    public List<Offer> fetchAllOffersAndSaveAllIfNotExist(List<Offer> offerList) {
+        return offerList.stream()
+                .filter(offerValidation::checkingIfOfferDoesNotExists)
+                .map(offers -> repository.fetchAllOffersAndSaveAllIfNotExist(offerList))
+                .flatMap(List::stream)
+                .toList();
 
-    }
-
-
-    public void fetchAllOffersAndSaveAllIfNotExist(List<OfferDto> offerDtos) {
-        offerDtos.stream()
-                .map(OfferMapper::mapOffer)
-                .filter(offerValidation::offerDoesNotExists)
-                .forEach(repository::save);
     }
 }

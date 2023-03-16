@@ -25,8 +25,8 @@ class OfferFacadeTest {
         OfferDto offerDto2 = mapToOfferDto(offer2);
 
         //when
-        offerFacade.save(offerDto1);
-        offerFacade.save(offerDto2);
+        offerFacade.register(offerDto1);
+        offerFacade.register(offerDto2);
         List<OfferDto> allOffers = offerFacade.findAllOffers();
 
         //then
@@ -43,13 +43,13 @@ class OfferFacadeTest {
         OfferDto offerDto1 = mapToOfferDto(offer1);
         OfferDto offerDto2 = mapToOfferDto(offer2);
         OfferDto offerDto3 = mapToOfferDto(offer3);
-        offerFacade.save(offerDto1);
-        offerFacade.save(offerDto2);
+        offerFacade.register(offerDto1);
+        offerFacade.register(offerDto2);
 
         //when
         //then
         assertThatRuntimeException()
-                .isThrownBy(() -> offerFacade.save(offerDto3))
+                .isThrownBy(() -> offerFacade.register(offerDto3))
                 .withMessage("Offer with the same url: " + offerDto3.getUrl() + " already exists");
     }
 
@@ -59,7 +59,7 @@ class OfferFacadeTest {
         String searchedOfferId = "1L";
         Offer offer = new Offer("1L", "https://www.example.com", "Developer", "Apfel", "10000");
         OfferDto offerDto = mapToOfferDto(offer);
-        offerFacade.save(offerDto);
+        offerFacade.register(offerDto);
 
         //when
         OfferDto offerById = offerFacade.findOfferById(searchedOfferId);
@@ -75,7 +75,7 @@ class OfferFacadeTest {
         String searchedOfferId = "2L";
         Offer offer = new Offer("1L", "https://www.example.com", "Developer", "Apfel", "10000");
         OfferDto offerDto = mapToOfferDto(offer);
-        offerFacade.save(offerDto);
+        offerFacade.register(offerDto);
 
         //when
         //then
@@ -92,7 +92,7 @@ class OfferFacadeTest {
         OfferDto offerDto = mapToOfferDto(offer);
 
         //when
-        offerFacade.save(offerDto);
+        offerFacade.register(offerDto);
         List<OfferDto> allOffers = offerFacade.findAllOffers();
 
         //then
@@ -108,7 +108,7 @@ class OfferFacadeTest {
         //when
         //then
         assertThatRuntimeException()
-                .isThrownBy(() -> offerFacade.save(offerDto))
+                .isThrownBy(() -> offerFacade.register(offerDto))
                 .withMessage("Offer id can not be: " + null);
     }
 
@@ -124,8 +124,8 @@ class OfferFacadeTest {
         //then
         assertThatRuntimeException()
                 .isThrownBy(() -> {
-                    offerFacade.save(offerDto1);
-                    offerFacade.save(offerDto2);
+                    offerFacade.register(offerDto1);
+                    offerFacade.register(offerDto2);
                 }).withMessage("Offer with id: " + offer2.getId() + " already exists");
     }
 
@@ -137,8 +137,8 @@ class OfferFacadeTest {
         OfferDto offerDto1 = mapToOfferDto(offer1);
         OfferDto offerDto2 = mapToOfferDto(offer2);
 
-        offerFacade.save(offerDto1);
-        offerFacade.save(offerDto2);
+        offerFacade.register(offerDto1);
+        offerFacade.register(offerDto2);
 
         //when
         Offer duplicateOffer = new Offer("2L", "https://www.example2.com", "HR", "Gogiel", "5000");
