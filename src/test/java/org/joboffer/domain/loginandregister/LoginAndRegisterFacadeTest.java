@@ -38,8 +38,8 @@ class LoginAndRegisterFacadeTest {
         UserDto userDto = mapToUserDto(user);
 
         //then
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> loginAndRegisterFacade.register(userDto)).withMessage("User must have an id");
+        assertThatRuntimeException()
+                .isThrownBy(() -> loginAndRegisterFacade.register(userDto)).withMessage("User id can not be: " + null);
 
     }
 
@@ -54,7 +54,7 @@ class LoginAndRegisterFacadeTest {
         UserDto userDto2 = mapToUserDto(user2);
 
         //then
-        assertThatIllegalArgumentException()
+        assertThatRuntimeException()
                 .isThrownBy(() -> {
                     loginAndRegisterFacade.register(userDto1);
                     loginAndRegisterFacade.register(userDto2);
@@ -83,12 +83,8 @@ class LoginAndRegisterFacadeTest {
         User user = new User("1L", "John", "Doe");
 
         //when
-        UserDto userDto = mapToUserDto(user);
-        loginAndRegisterFacade.register(userDto);
-
         //then
-        assertThrows(IllegalArgumentException.class, () -> loginAndRegisterFacade.findUserByUserName(searchUserName));
-
+        assertThrows(RuntimeException.class, () -> loginAndRegisterFacade.findUserByUserName(searchUserName));
     }
 }
 

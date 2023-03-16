@@ -15,29 +15,30 @@ public class LoginAndRegisterFacade {
     private final LoginAndRegisterValidation validation;
 
 
+    public User register(UserDto userDto) {
+        if (validation.checkingIfUserIdIsNull(userDto)) {
+            throw new UserValidationException("User id can not be: " + null);
+        }
+        if (validation.checkingIfUserWithTheSameIdExist(userDto.getId())) {
+            throw new UserValidationException("User with id " + userDto.getId() + " already exists");
+        }
+        User mappedUser = mapToUser(userDto);
+        return repository.save(mappedUser);
+
+    }
+
     public List<UserDto> findAllUsers() {
-        return repository.findAll().stream()
+        return repository.findAll()
+                .stream()
                 .map(UserDtoMapper::mapToUserDto)
                 .toList();
     }
 
 
     public UserDto findUserByUserName(String username) {
-        return repository.findAll().stream()
-                .map(user -> repository.findByUsername(username))
-                .map(UserDtoMapper::mapToUserDto)
-                .findFirst()
-                .orElseThrow(() -> new UserDoesNotExistException("User with username " + username + " does not exist"));
+        User user = repository.findByUsername(username)
+                .orElseThrow(() -> new UserValidationException("User with username: " + username + " does not exist"));
+        return mapToUserDto(user);
     }
-
-
-    public UserDto register(UserDto userDto) {
-        validation.checkingIfUserIdIsNull(userDto);
-        validation.checkingIfUserWithTheSameIdExist(userDto);
-        User user = mapToUser(userDto);
-        User savedUser = repository.save(user);
-        return mapToUserDto(savedUser);
-    }
-
 
 }
