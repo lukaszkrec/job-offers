@@ -12,6 +12,7 @@ public class OfferFacade {
 
     private final OfferRepository repository;
     private final OfferValidation offerValidation;
+    private final OfferFetcher offerFetcher;
 
     public Offer register(OfferDto offer) {
         if (offerValidation.checkingIfOfferIdIsNull(offer)) {
@@ -41,13 +42,13 @@ public class OfferFacade {
                 .orElseThrow(() -> new OfferNotFoundException("Offer with id: " + offerId + " does not exist"));
     }
 
-
-    public List<Offer> fetchAllOffersAndSaveAllIfNotExist(List<Offer> offerList) {
-        return offerList.stream()
-                .filter(offerValidation::checkingIfOfferDoesNotExists)
-                .map(offers -> repository.fetchAllOffersAndSaveAllIfNotExist(offerList))
-                .flatMap(List::stream)
+    public List<Offer> fetchAllOffersAndSaveAllIfNotExist() {
+        List<Offer> fatheredOffers = offerFetcher.fetchAllOffers()
+                .stream()
+                .filter(offerValidation::checkingIfOfferDoesNotExistsByOfferUrl)
+                .filter(offerValidation::checkingIfOfferUrlIsNotNullAndUrlInNotEmpty)
                 .toList();
-
+        repository.saveAll(fatheredOffers);
+        return fatheredOffers;
     }
 }

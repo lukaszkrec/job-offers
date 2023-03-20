@@ -11,6 +11,9 @@ interface OfferRepository {
 
     Offer save(Offer offer);
 
-    List<Offer> fetchAllOffersAndSaveAllIfNotExist(List<Offer> offers);
+    Optional<Offer> findByUrl(String url);
 
+    boolean existsByUrl(String url);
+
+    List<Offer> saveAll(List<Offer> offers);
 }

@@ -15,6 +15,28 @@ class OfferRepositoryTestImpl implements OfferRepository {
     }
 
     @Override
+    public Optional<Offer> findByUrl(String url) {
+        return offers.values()
+                .stream()
+                .filter(offer -> offer.getUrl().equals(url))
+                .findFirst();
+    }
+
+    @Override
+    public boolean existsByUrl(String url) {
+        return offers.values()
+                .stream()
+                .noneMatch(offer -> offer.getUrl().equals(url));
+    }
+
+    @Override
+    public List<Offer> saveAll(List<Offer> offerList) {
+        return offerList.stream()
+                .map(offer -> offers.put(offer.getId(), offer))
+                .toList();
+    }
+
+    @Override
     public List<Offer> findAllOffers() {
         return offers.values().stream().toList();
     }
@@ -27,13 +49,5 @@ class OfferRepositoryTestImpl implements OfferRepository {
                 .filter(entry -> entry.getKey().equals(offerId))
                 .map(Map.Entry::getValue)
                 .findFirst();
-    }
-
-
-    @Override
-    public List<Offer> fetchAllOffersAndSaveAllIfNotExist(List<Offer> offerList) {
-        return offerList.stream()
-                .map(this::save)
-                .toList();
     }
 }
