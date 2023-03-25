@@ -13,7 +13,7 @@ class OfferFetcherClientConfig {
 
     HttpClientConnectionConfigurationProperties properties;
 
-    public OfferFetcherClientConfig(HttpClientConnectionConfigurationProperties properties) {
+    OfferFetcherClientConfig(HttpClientConnectionConfigurationProperties properties) {
         this.properties = properties;
     }
 
