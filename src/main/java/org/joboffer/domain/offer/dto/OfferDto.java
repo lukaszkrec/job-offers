@@ -4,10 +4,18 @@ import lombok.*;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class OfferDto {
     private String id;
-    private String url;
-    private String workSite;
+    @NonNull
+    private String title;
+    @NonNull
     private String company;
+    @NonNull
     private String salary;
+    @NonNull
+    private String offerUrl;
 }
+

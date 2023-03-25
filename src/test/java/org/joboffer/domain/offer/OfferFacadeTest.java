@@ -22,8 +22,9 @@ class OfferFacadeTest {
     @Test
     void should_save_two_offers_when_there_are_no_offers_in_database() {
         //given
-        Offer offer1 = new Offer("1L", "https://www.example.com", "Developer", "Apfel", "10000");
-        Offer offer2 = new Offer("2L", "https://www.example1.com", "HR", "Amazong", "55555");
+        Offer offer1 = new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1");
+        Offer offer2 = new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2");
+
         OfferDto offerDto1 = mapToOfferDto(offer1);
         OfferDto offerDto2 = mapToOfferDto(offer2);
 
@@ -39,9 +40,9 @@ class OfferFacadeTest {
     @Test
     void should_throw_exception_when_repository_already_had_offers_with_the_same_url() {
         //given
-        Offer offer1 = new Offer("1L", "https://www.example.com", "Developer", "Apfel", "10000");
-        Offer offer2 = new Offer("2L", "https://www.example1.com", "HR", "Amazong", "55555");
-        Offer offer3 = new Offer("3L", "https://www.example1.com", "Scrum Master", "GLob", "659832");
+        Offer offer1 = new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1");
+        Offer offer2 = new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2");
+        Offer offer3 = new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com2");
         OfferDto offerDto1 = mapToOfferDto(offer1);
         OfferDto offerDto2 = mapToOfferDto(offer2);
         OfferDto offerDto3 = mapToOfferDto(offer3);
@@ -53,7 +54,7 @@ class OfferFacadeTest {
         assertAll(
                 () -> assertThatRuntimeException()
                         .isThrownBy(() -> offerFacade.register(offerDto3))
-                        .withMessage("Offer with the same url: " + offerDto3.getUrl() + " already exists"),
+                        .withMessage("Offer with the same url: " + offerDto3.getOfferUrl() + " already exists"),
                 () -> assertThat(offerFacade.findAllOffers()).hasSize(2)
                         .containsExactlyInAnyOrder(offerDto1, offerDto2)
         );
@@ -63,7 +64,7 @@ class OfferFacadeTest {
     void should_return_an_offer_if_offer_with_the_given_id_exist() {
         //given
         String searchedOfferId = "1L";
-        Offer offer = new Offer("1L", "https://www.example.com", "Developer", "Apfel", "10000");
+        Offer offer = new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1");
         OfferDto offerDto = mapToOfferDto(offer);
         offerFacade.register(offerDto);
 
@@ -81,7 +82,7 @@ class OfferFacadeTest {
     void should_throw_an_exception_when_offer_with_the_given_id_does_not_exist() {
         //given
         String searchedOfferId = "2L";
-        Offer offer = new Offer("1L", "https://www.example.com", "Developer", "Apfel", "10000");
+        Offer offer = new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1");
         OfferDto offerDto = mapToOfferDto(offer);
         offerFacade.register(offerDto);
 
@@ -95,7 +96,7 @@ class OfferFacadeTest {
     @Test
     void should_save_offer_when_given_params_are_correct() {
         //given
-        Offer offer = new Offer("1L", "https://www.example.com", "Developer", "Apfel", "10000");
+        Offer offer = new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com");
         OfferDto offerDto = mapToOfferDto(offer);
 
         //when
@@ -107,17 +108,17 @@ class OfferFacadeTest {
                 () -> assertThat(offersDatabaseAfterRegistration).contains(offerDto),
                 () -> assertThat(offersDatabaseAfterRegistration).hasSize(1).containsExactly(offerDto),
                 () -> assertThat(offerDto.getId()).isNotEmpty().isEqualTo("1L"),
-                () -> assertThat(offerDto.getUrl()).isNotEmpty().isEqualTo("https://www.example.com"),
-                () -> assertThat(offerDto.getWorkSite()).isNotEmpty().isEqualTo("Developer"),
-                () -> assertThat(offerDto.getCompany()).isNotEmpty().isEqualTo("Apfel"),
-                () -> assertThat(offerDto.getSalary()).isNotEmpty().isEqualTo("10000")
+                () -> assertThat(offerDto.getOfferUrl()).isNotEmpty().isEqualTo("http://www.example.com"),
+                () -> assertThat(offerDto.getTitle()).isNotEmpty().isEqualTo("Scrum Master"),
+                () -> assertThat(offerDto.getCompany()).isNotEmpty().isEqualTo("Amazon"),
+                () -> assertThat(offerDto.getSalary()).isNotEmpty().isEqualTo("353651235")
         );
     }
 
     @Test
     void should_throw_an_exception_when_saved_offer_has_null_id() {
         //given
-        Offer offer = new Offer(null, "https://www.example.com", "Developer", "Apfel", "10000");
+        Offer offer = new Offer(null, "Scrum Master", "Amazon", "353651235", "http://www.example.com1");
         OfferDto offerDto = mapToOfferDto(offer);
 
         //when
@@ -134,8 +135,8 @@ class OfferFacadeTest {
     @Test
     void should_throw_an_exception_when_saved_offer_has_same_id_as_existing_offer() {
         //given
-        Offer offer1 = new Offer("1L", "https://www.example1.com", "Developer", "Apfel", "10000");
-        Offer offer2 = new Offer("1L", "https://www.example2.com", "Developer", "Apfel", "10000");
+        Offer offer1 = new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1");
+        Offer offer2 = new Offer("1L", "PO", "Apel", "1010431510", "http://www.example.com2");
         OfferDto offerDto1 = mapToOfferDto(offer1);
         OfferDto offerDto2 = mapToOfferDto(offer2);
 
@@ -157,7 +158,7 @@ class OfferFacadeTest {
         List<OfferDto> databaseBeforeFetching = offerFacade.findAllOffers();
 
         //when
-        List<Offer> fetchedOffers = offerFacade.fetchAllOffersAndSaveAllIfNotExist();
+        List<OfferDto> fetchedOffers = offerFacade.fetchAllOffersAndSaveAllIfNotExist();
         List<OfferDto> databaseAfterFetching = offerFacade.findAllOffers();
 
         //then
@@ -165,24 +166,25 @@ class OfferFacadeTest {
                 () -> assertThat(databaseBeforeFetching).isEmpty(),
                 () -> assertThat(fetchedOffers).hasSize(7).containsExactlyInAnyOrderElementsOf(
                         Stream.of(
-                                new Offer("1L", "http://www.example.com1", "Scrum Master", "Amazon", "101010"),
-                                new Offer("2L", "http://www.example.com2", "PO", "Apel", "4141251"),
-                                new Offer("3L", "http://www.example.com3", "QA", "Gogiel", "5135624734"),
-                                new Offer("4L", "http://www.example.com4", "PY Dev", "Media Expert", "5145141"),
-                                new Offer("5L", "http://www.example.com5", "C++ Dev", "Comarch", "5312514"),
-                                new Offer("6L", "http://www.example.com6", "C# Dev", "Sii", "5235124"),
-                                new Offer("7L", "http://www.example.com7", "Scala Dev", "GlobalLogic", "4141354135")
-                        ).toList()
+                                        new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                                        new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
+                                        new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
+                                        new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                                        new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5"),
+                                        new Offer("6L", "C# Dev", "Sii", "64363", "http://www.example.com6"),
+                                        new Offer("7L", "Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7")
+                                ).map(OfferMapper::mapToOfferDto)
+                                .toList()
                 ),
                 () -> assertThat(databaseAfterFetching).hasSize(7).containsExactlyInAnyOrderElementsOf(
                         Stream.of(
-                                        new Offer("1L", "http://www.example.com1", "Scrum Master", "Amazon", "101010"),
-                                        new Offer("2L", "http://www.example.com2", "PO", "Apel", "4141251"),
-                                        new Offer("3L", "http://www.example.com3", "QA", "Gogiel", "5135624734"),
-                                        new Offer("4L", "http://www.example.com4", "PY Dev", "Media Expert", "5145141"),
-                                        new Offer("5L", "http://www.example.com5", "C++ Dev", "Comarch", "5312514"),
-                                        new Offer("6L", "http://www.example.com6", "C# Dev", "Sii", "5235124"),
-                                        new Offer("7L", "http://www.example.com7", "Scala Dev", "GlobalLogic", "4141354135")
+                                        new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                                        new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
+                                        new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
+                                        new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                                        new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5"),
+                                        new Offer("6L", "C# Dev", "Sii", "64363", "http://www.example.com6"),
+                                        new Offer("7L", "Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7")
                                 )
                                 .map(OfferMapper::mapToOfferDto)
                                 .toList()
@@ -197,35 +199,35 @@ class OfferFacadeTest {
         List<OfferDto> offersDatabaseBeforeFetching = offerFacade.findAllOffers();
 
         //when
-        List<Offer> fetchedOffers = offerFacade.fetchAllOffersAndSaveAllIfNotExist();
+        List<OfferDto> fetchedOffers = offerFacade.fetchAllOffersAndSaveAllIfNotExist();
         List<OfferDto> offersDatabaseAfterFetching = offerFacade.findAllOffers();
 
         //then
         assertAll(
                 () -> assertThat(offersDatabaseBeforeFetching).hasSize(5).containsExactlyInAnyOrderElementsOf(
                         Stream.of(
-                                        new Offer("1L", "http://www.example.com1", "Scrum Master", "Amazon", "101010"),
-                                        new Offer("2L", "http://www.example.com2", "PO", "Apel", "4141251"),
-                                        new Offer("3L", "http://www.example.com3", "QA", "Gogiel", "5135624734"),
-                                        new Offer("4L", "http://www.example.com4", "PY Dev", "Media Expert", "5145141"),
-                                        new Offer("5L", "http://www.example.com5", "C++ Dev", "Comarch", "5312514")
+                                        new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                                        new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
+                                        new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
+                                        new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                                        new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5")
                                 )
                                 .map(OfferMapper::mapToOfferDto)
                                 .toList()
                 ),
                 () -> assertThat(fetchedOffers).hasSize(2).containsExactlyInAnyOrder(
-                        new Offer("6L", "http://www.example.com6", "C# Dev", "Sii", "5235124"),
-                        new Offer("7L", "http://www.example.com7", "Scala Dev", "GlobalLogic", "4141354135")
+                        mapToOfferDto(new Offer("6L", "C# Dev", "Sii", "64363", "http://www.example.com6")),
+                        mapToOfferDto(new Offer("7L", "Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7"))
                 ),
                 () -> assertThat(offersDatabaseAfterFetching).hasSize(7).containsExactlyInAnyOrderElementsOf(
                         Stream.of(
-                                        new Offer("1L", "http://www.example.com1", "Scrum Master", "Amazon", "101010"),
-                                        new Offer("2L", "http://www.example.com2", "PO", "Apel", "4141251"),
-                                        new Offer("3L", "http://www.example.com3", "QA", "Gogiel", "5135624734"),
-                                        new Offer("4L", "http://www.example.com4", "PY Dev", "Media Expert", "5145141"),
-                                        new Offer("5L", "http://www.example.com5", "C++ Dev", "Comarch", "5312514"),
-                                        new Offer("6L", "http://www.example.com6", "C# Dev", "Sii", "5235124"),
-                                        new Offer("7L", "http://www.example.com7", "Scala Dev", "GlobalLogic", "4141354135")
+                                        new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                                        new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
+                                        new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
+                                        new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                                        new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5"),
+                                        new Offer("6L", "C# Dev", "Sii", "64363", "http://www.example.com6"),
+                                        new Offer("7L", "Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7")
                                 )
                                 .map(OfferMapper::mapToOfferDto)
                                 .toList()
@@ -236,11 +238,11 @@ class OfferFacadeTest {
 
     private List<Offer> inMemoryDatabaseConfiguration() {
         List<Offer> inMemoryTestData = List.of(
-                new Offer("1L", "http://www.example.com1", "Scrum Master", "Amazon", "101010"),
-                new Offer("2L", "http://www.example.com2", "PO", "Apel", "4141251"),
-                new Offer("3L", "http://www.example.com3", "QA", "Gogiel", "5135624734"),
-                new Offer("4L", "http://www.example.com4", "PY Dev", "Media Expert", "5145141"),
-                new Offer("5L", "http://www.example.com5", "C++ Dev", "Comarch", "5312514")
+                new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
+                new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
+                new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5")
         );
         return inMemoryTestData.stream()
                 .map(OfferMapper::mapToOfferDto)

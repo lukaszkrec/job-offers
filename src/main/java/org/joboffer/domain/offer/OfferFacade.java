@@ -22,7 +22,7 @@ public class OfferFacade {
             throw new OfferParametersCredentialException("Offer with id: " + offer.getId() + " already exists");
         }
         if (offerValidation.checkingIfOffersWithGivenUrlAlreadyExist(offer)) {
-            throw new DuplicatedKeyException("Offer with the same url: " + offer.getUrl() + " already exists");
+            throw new DuplicatedKeyException("Offer with the same url: " + offer.getOfferUrl() + " already exists");
         }
         Offer mappedOffer = mapToOffer(offer);
         return repository.save(mappedOffer);
@@ -42,13 +42,17 @@ public class OfferFacade {
                 .orElseThrow(() -> new OfferNotFoundException("Offer with id: " + offerId + " does not exist"));
     }
 
-    public List<Offer> fetchAllOffersAndSaveAllIfNotExist() {
+    public List<OfferDto> fetchAllOffersAndSaveAllIfNotExist() {
         List<Offer> fatheredOffers = offerFetcher.fetchAllOffers()
                 .stream()
+                .map(OfferMapper::mapToOffer)
                 .filter(offerValidation::checkingIfOfferDoesNotExistsByOfferUrl)
                 .filter(offerValidation::checkingIfOfferUrlIsNotNullAndUrlInNotEmpty)
                 .toList();
         repository.saveAll(fatheredOffers);
-        return fatheredOffers;
+        return fatheredOffers
+                .stream()
+                .map(OfferMapper::mapToOfferDto)
+                .toList();
     }
 }

@@ -17,7 +17,7 @@ class OfferValidation {
     boolean checkingIfOffersWithGivenUrlAlreadyExist(OfferDto offerDto) {
         return repository.findAllOffers()
                 .stream()
-                .anyMatch(filteredOffer -> filteredOffer.getUrl().equals(offerDto.getUrl()));
+                .anyMatch(filteredOffer -> filteredOffer.getOfferUrl().equals(offerDto.getOfferUrl()));
     }
 
 
@@ -32,11 +32,11 @@ class OfferValidation {
     }
 
     boolean checkingIfOfferDoesNotExistsByOfferUrl(Offer offer) {
-        return repository.existsByUrl(offer.getUrl());
+        return repository.existsByUrl(offer.getOfferUrl());
 
     }
 
     boolean checkingIfOfferUrlIsNotNullAndUrlInNotEmpty(Offer offer) {
-        return repository.findByUrl(offer.getUrl()).isEmpty();
+        return repository.findByUrl(offer.getOfferUrl()).isEmpty();
     }
 }

@@ -10,20 +10,20 @@ class OfferMapper {
     static OfferDto mapToOfferDto(Offer offer) {
         return OfferDto.builder()
                 .id(offer.getId())
-                .url(offer.getUrl())
-                .workSite(offer.getWorkSite())
+                .title(offer.getTitle())
                 .company(offer.getCompany())
                 .salary(offer.getSalary())
+                .offerUrl(offer.getOfferUrl())
                 .build();
     }
 
     static Offer mapToOffer(OfferDto dto) {
         return Offer.builder()
                 .id(dto.getId())
-                .url(dto.getUrl())
-                .workSite(dto.getWorkSite())
+                .title(dto.getTitle())
                 .company(dto.getCompany())
                 .salary(dto.getSalary())
+                .offerUrl(dto.getOfferUrl())
                 .build();
     }
 }

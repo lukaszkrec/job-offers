@@ -1,9 +1,6 @@
 package org.joboffer.domain.offer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 class OfferRepositoryTestImpl implements OfferRepository {
 
@@ -18,7 +15,7 @@ class OfferRepositoryTestImpl implements OfferRepository {
     public Optional<Offer> findByUrl(String url) {
         return offers.values()
                 .stream()
-                .filter(offer -> offer.getUrl().equals(url))
+                .filter(offer -> offer.getOfferUrl().equals(url))
                 .findFirst();
     }
 
@@ -26,13 +23,13 @@ class OfferRepositoryTestImpl implements OfferRepository {
     public boolean existsByUrl(String url) {
         return offers.values()
                 .stream()
-                .noneMatch(offer -> offer.getUrl().equals(url));
+                .noneMatch(offer -> offer.getOfferUrl().equals(url));
     }
 
     @Override
     public List<Offer> saveAll(List<Offer> offerList) {
         return offerList.stream()
-                .map(offer -> offers.put(offer.getId(), offer))
+                .map(this::save)
                 .toList();
     }
 

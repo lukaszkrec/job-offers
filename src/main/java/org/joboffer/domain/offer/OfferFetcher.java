@@ -1,8 +1,10 @@
 package org.joboffer.domain.offer;
 
+import org.joboffer.domain.offer.dto.OfferDto;
+
 import java.util.List;
 
-interface OfferFetcher {
+public interface OfferFetcher {
 
-    List<Offer> fetchAllOffers();
+    List<OfferDto> fetchAllOffers();
 }

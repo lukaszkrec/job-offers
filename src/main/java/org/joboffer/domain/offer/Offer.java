@@ -7,8 +7,8 @@ import lombok.*;
 @Builder
 class Offer {
     private String id;
-    private String url;
-    private String workSite;
+    private String title;
     private String company;
     private String salary;
+    private String offerUrl;
 }
