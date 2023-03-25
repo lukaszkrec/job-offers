@@ -12,8 +12,6 @@ l
 Rsrc/main/java/org/joboffer/domain/loginandregister/LoginAndRegisterRepository.java,e\d\ed02ab8228ab9f4415652662065d21ba645ff421
 ~
 Nsrc/main/java/org/joboffer/domain/loginandregister/LoginAndRegisterFacade.java,4\9\497af9b6df23e1708cdc4dbc90d9381659578ac0
-s
-Csrc/main/java/org/joboffer/domain/offer/OfferNotFoundException.java,e\d\ed9f93b0c3efcd80d8cd1aacf16267c0dc681c19
 
 Osrc/main/java/org/joboffer/domain/offer/OfferParametersCredentialException.java,0\3\03daafd8d2fc80b3d5464d4081eb96c47d6dd294
 l

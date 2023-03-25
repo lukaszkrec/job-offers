@@ -1,7 +1,7 @@
 package org.joboffer.domain.offer;
 
-class OfferNotFoundException extends RuntimeException {
-    OfferNotFoundException(String message) {
+public class OfferNotFoundException extends RuntimeException {
+    public OfferNotFoundException(String message) {
         super(message);
     }
 }
