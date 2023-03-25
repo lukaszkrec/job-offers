@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 
 class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements SampleJobOfferResponse {
 
+    @Autowired
+    OfferFetcher fetcher;
+
     @Test
     void should_return_empty_response_when_there_are_no_offers_in_external_http_server() {
 //        step 1: there are no offers in external HTTP server (http://ec2-3-120-147-150.eu-central-1.compute.amazonaws.com:5057/offers)
@@ -17,7 +20,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
                 .willReturn(WireMock.aResponse()
                         .withStatus(HttpStatus.OK.value())
                         .withHeader("Content-Type", "application/json")
-                        .withBody(bodyWithOneOfferJson())));
+                        .withBody(bodyWithZeroOffersJson())));
 
 //        step 2: scheduler ran 1st time and made GET to external server and system added 0 offers to database
 //        step 3: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
