@@ -11,7 +11,7 @@ import java.time.Duration;
 @Configuration
 class OfferFetcherClientConfig {
 
-    HttpClientConnectionConfigurationProperties properties;
+    private final HttpClientConnectionConfigurationProperties properties;
 
     OfferFetcherClientConfig(HttpClientConnectionConfigurationProperties properties) {
         this.properties = properties;
