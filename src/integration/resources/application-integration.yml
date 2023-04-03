@@ -1,0 +1,8 @@
+offer:
+  http:
+    client:
+      config:
+        fetcherRunOccurrence: PT1s
+
+scheduling:
+  enabled: false

@@ -20,6 +20,7 @@
         <mockito-core.version>5.2.0</mockito-core.version>
         <assertj-core.version>3.24.2</assertj-core.version>
         <wiremock-jre8-standalone.version>2.35.0</wiremock-jre8-standalone.version>
+        <awaitility.version>4.2.0</awaitility.version>
     </properties>
 
 
@@ -94,6 +95,12 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
