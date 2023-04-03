@@ -43,14 +43,14 @@ public class OfferFacade {
     }
 
     public List<OfferDto> fetchAllOffersAndSaveAllIfNotExist() {
-        List<Offer> fatheredOffers = offerFetcher.fetchAllOffers()
+        List<Offer> fetchedOffers = offerFetcher.fetchAllOffers()
                 .stream()
                 .map(OfferMapper::mapToOffer)
                 .filter(offerValidation::checkingIfOfferDoesNotExistsByOfferUrl)
                 .filter(offerValidation::checkingIfOfferUrlIsNotNullAndUrlInNotEmpty)
                 .toList();
-        repository.saveAll(fatheredOffers);
-        return fatheredOffers
+        repository.saveAll(fetchedOffers);
+        return fetchedOffers
                 .stream()
                 .map(OfferMapper::mapToOfferDto)
                 .toList();
