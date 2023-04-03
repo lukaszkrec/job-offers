@@ -7,7 +7,12 @@ offer:
   http:
     client:
       config:
+        fetcherRunOccurrence: PT3H
         connectionTimeout: 1000
         readTimeout: 1000
         port: 5057
         uri: http://ec2-3-120-147-150.eu-central-1.compute.amazonaws.com
+
+scheduling:
+  enabled: true
+
