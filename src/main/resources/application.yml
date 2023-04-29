@@ -1,7 +1,8 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://admin:admin@localhost:27017/offers
+      uri: mongodb://root:example@mongo:27017/offers
+
 
 offer:
   http:

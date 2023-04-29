@@ -8,7 +8,7 @@ class OfferFacadeConfiguration {
 
     @Bean
     OfferFacade offerFacade(OfferRepository repository, OfferFetcher offerFetcher) {
-        OfferValidation validation = new OfferValidation(repository);
+        final OfferValidation validation = new OfferValidation(repository);
         return new OfferFacade(repository, validation, offerFetcher);
     }
 }

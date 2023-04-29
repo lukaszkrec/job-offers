@@ -9,13 +9,13 @@ class OfferValidation {
     private final OfferRepository repository;
 
     boolean checkingIfOfferExistsWithSameId(String offerId) {
-        return repository.findAllOffers()
+        return repository.findAll()
                 .stream()
                 .anyMatch(offerDto -> offerDto.getId().equals(offerId));
     }
 
     boolean checkingIfOffersWithGivenUrlAlreadyExist(OfferDto offerDto) {
-        return repository.findAllOffers()
+        return repository.findAll()
                 .stream()
                 .anyMatch(filteredOffer -> filteredOffer.getOfferUrl().equals(offerDto.getOfferUrl()));
     }
@@ -26,17 +26,17 @@ class OfferValidation {
     }
 
     boolean checkingIfOfferWithGivenIdExist(Offer serchedOffer) {
-        return repository.findAllOffers()
+        return repository.findAll()
                 .stream()
                 .anyMatch(offer -> offer.getId().equals(serchedOffer.getId()));
     }
 
     boolean checkingIfOfferDoesNotExistsByOfferUrl(Offer offer) {
-        return repository.existsByUrl(offer.getOfferUrl());
+        return repository.existsByOfferUrl(offer.getOfferUrl());
 
     }
 
     boolean checkingIfOfferUrlIsNotNullAndUrlInNotEmpty(Offer offer) {
-        return repository.findByUrl(offer.getOfferUrl()).isEmpty();
+        return repository.findOfferByOfferUrl(offer.getOfferUrl()).isEmpty();
     }
 }
