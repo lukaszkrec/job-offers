@@ -29,11 +29,10 @@ public class OfferFacade {
     }
 
     public List<OfferDto> findAllOffers() {
-        return repository.findAllOffers().stream()
+        return repository.findAll().stream()
                 .map(OfferMapper::mapToOfferDto)
                 .toList();
     }
-
 
     public OfferDto findOfferById(String offerId) {
         return repository.findOfferById(offerId)
