@@ -135,20 +135,18 @@ class OfferFacadeTest {
     @Test
     void should_throw_an_exception_when_saved_offer_has_same_id_as_existing_offer() {
         //given
-        Offer offer1 = new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1");
-        Offer offer2 = new Offer("1L", "PO", "Apel", "1010431510", "http://www.example.com2");
-        OfferDto offerDto1 = mapToOfferDto(offer1);
-        OfferDto offerDto2 = mapToOfferDto(offer2);
+        OfferDto offer1 = new OfferDto("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1");
+        OfferDto offer2 = new OfferDto("1L", "PO", "Apel", "1010431510", "http://www.example.com2");
 
         //when
         //then
         assertAll(
                 () -> assertThatRuntimeException()
                         .isThrownBy(() -> {
-                            offerFacade.register(offerDto1);
-                            offerFacade.register(offerDto2);
+                            offerFacade.register(offer1);
+                            offerFacade.register(offer2);
                         }).withMessage("Offer with id: " + offer2.getId() + " already exists"),
-                () -> assertThat(offerFacade.findAllOffers()).hasSize(1).containsExactlyInAnyOrder(offerDto1)
+                () -> assertThat(offerFacade.findAllOffers()).hasSize(1).containsExactlyInAnyOrder(offer1)
         );
     }
 
@@ -236,16 +234,15 @@ class OfferFacadeTest {
     }
 
 
-    private List<Offer> inMemoryDatabaseConfiguration() {
-        List<Offer> inMemoryTestData = List.of(
-                new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
-                new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
-                new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
-                new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
-                new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5")
+    private List<OfferDto> inMemoryDatabaseConfiguration() {
+        List<OfferDto> inMemoryTestData = List.of(
+                new OfferDto("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                new OfferDto("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
+                new OfferDto("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
+                new OfferDto("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                new OfferDto("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5")
         );
         return inMemoryTestData.stream()
-                .map(OfferMapper::mapToOfferDto)
                 .map(offerFacade::register)
                 .toList();
     }

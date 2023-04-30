@@ -6,6 +6,7 @@ import org.joboffer.domain.offer.dto.OfferDto;
 import java.util.List;
 
 import static org.joboffer.domain.offer.OfferMapper.mapToOffer;
+import static org.joboffer.domain.offer.OfferMapper.mapToOfferDto;
 
 @AllArgsConstructor
 public class OfferFacade {
@@ -14,7 +15,7 @@ public class OfferFacade {
     private final OfferValidation offerValidation;
     private final OfferFetcher offerFetcher;
 
-    public Offer register(OfferDto offer) {
+    public OfferDto register(OfferDto offer) {
         if (offerValidation.checkingIfOfferIdIsNull(offer)) {
             throw new OfferParametersCredentialException("Offer id can not be: " + null);
         }
@@ -25,7 +26,8 @@ public class OfferFacade {
             throw new DuplicatedKeyException("Offer with the same url: " + offer.getOfferUrl() + " already exists");
         }
         Offer mappedOffer = mapToOffer(offer);
-        return repository.save(mappedOffer);
+        repository.save(mappedOffer);
+        return mapToOfferDto(mappedOffer);
     }
 
     public List<OfferDto> findAllOffers() {
