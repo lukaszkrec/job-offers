@@ -6,10 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
@@ -20,7 +17,20 @@ class OfferRepositoryTestImpl implements OfferRepository {
 
     @Override
     public Offer save(Offer offerToSave) {
-        return offers.put(offerToSave.getId(), offerToSave);
+        Offer offer;
+        if (!(offerToSave.getId() == null)) {
+            offer = offers.put(offerToSave.getId(), offerToSave);
+        } else {
+            offer = offers.put(UUID.randomUUID().toString(), offerToSave);
+        }
+        return offer;
+    }
+
+    @Override
+    public <S extends Offer> List<S> saveAll(Iterable<S> entities) {
+        return (List<S>) StreamSupport.stream(entities.spliterator(), false)
+                .map(this::save)
+                .toList();
     }
 
     @Override
@@ -33,9 +43,12 @@ class OfferRepositoryTestImpl implements OfferRepository {
 
     @Override
     public boolean existsByOfferUrl(String url) {
-        return offers.values()
-                .stream()
-                .noneMatch(offer -> offer.getOfferUrl().equals(url));
+        for (Offer offer : offers.values()) {
+            if (offer.getOfferUrl().equals(url)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -57,14 +70,6 @@ class OfferRepositoryTestImpl implements OfferRepository {
     @Override
     public boolean existsById(String s) {
         return false;
-    }
-
-
-    @Override
-    public <S extends Offer> List<S> saveAll(Iterable<S> entities) {
-        return (List<S>) StreamSupport.stream(entities.spliterator(), false)
-                .map(this::save)
-                .toList();
     }
 
     @Override

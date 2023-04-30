@@ -47,7 +47,7 @@ public class OfferFacade {
         List<Offer> fetchedOffers = offerFetcher.fetchAllOffers()
                 .stream()
                 .map(OfferMapper::mapToOffer)
-                .filter(offerValidation::checkingIfOfferDoesNotExistsByOfferUrl)
+                .filter(offer -> !repository.existsByOfferUrl(offer.getOfferUrl()))
                 .filter(offerValidation::checkingIfOfferUrlIsNotNullAndUrlInNotEmpty)
                 .toList();
         repository.saveAll(fetchedOffers);

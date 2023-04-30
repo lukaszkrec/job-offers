@@ -1,5 +1,6 @@
 package org.joboffer.feature;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.assertj.core.api.Assertions;
 import org.joboffer.BaseIntegrationTest;
@@ -14,30 +15,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-/*
-step 3: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
-step 4: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401)
-step 5: user made POST /register with username=someUser, password=somePassword and system registered user with status OK(200)
-step 6: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
-step 7: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 0 offers
-step 8: there are 2 new offers in external HTTP server
-step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
-step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
-step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
-step 12: user made GET /offers/1000 and system returned OK(200) with offer
-step 13: there are 2 new offers in external HTTP server
-step 14: scheduler ran 3rd time and made GET to external server and system added 2 new offers with ids: 3000 and 4000 to database
-step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
-step 16: user made POST /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and offer and system returned CREATED(201) with saved offer
-step 17: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 1 offer
- */
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements SampleJobOfferResponse {
 
@@ -49,6 +36,28 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
 
     @Autowired
     OfferRepository offerRepository;
+
+
+    @Test
+    @DisplayName("User tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)")
+    void test11() {
+    }
+
+    @Test
+    @DisplayName("User made GET /offers with no jwt token and system returned UNAUTHORIZED(401)")
+    void test12() {
+    }
+
+    @Test
+    @DisplayName("User made POST /register with username=someUser, password=somePassword and system registered user with status OK(200)")
+    void test13() {
+    }
+
+    @Test
+    @DisplayName("User tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC")
+    void test14() {
+    }
+
 
     @Test
     @DisplayName("There are no offers in external HTTP server (http://ec2-3-120-147-150.eu-central-1.compute.amazonaws.com:5057/offers)")
@@ -78,7 +87,6 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
                         .withBody(bodyWithZeroOffersJson())));
 
         //when
-
         List<OfferDto> fetchedOffers = fetcherScheduler.scheduleOfferFetcher();
 
         //then
@@ -87,5 +95,88 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
                 () -> Assertions.assertThat(offerRepository.findAll()).isEmpty(),
                 () -> Mockito.verify(offerFacade, times(1)).fetchAllOffersAndSaveAllIfNotExist()
         );
+    }
+
+    @Test
+    @DisplayName("User made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 0 offers")
+    void test1() throws Exception {
+        //given
+        wireMockServer.stubFor(WireMock.get("/offers")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyWithZeroOffersJson())));
+
+        List<OfferDto> offersFromExternalServer = fetcherScheduler.scheduleOfferFetcher();
+        Assertions.assertThat(offersFromExternalServer).isEmpty();
+
+        //when
+        MvcResult mvcResult = mvc.perform(get("/offers"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String responseWithNoOffers = mvcResult.getResponse().getContentAsString();
+        List<OfferDto> offerResponse = objectMapper.readValue(responseWithNoOffers, new TypeReference<>() {
+        });
+
+        assertAll(
+                () -> Assertions.assertThat(offerResponse).isEmpty(),
+                () -> Assertions.assertThat(offerRepository.findAll()).isEmpty(),
+                () -> Mockito.verify(offerFacade, times(1)).fetchAllOffersAndSaveAllIfNotExist()
+        );
+    }
+
+    @Test
+    @DisplayName("There are 2 new offers in external HTTP server")
+    void test2() {
+    }
+
+    @Test
+    @DisplayName("Scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database")
+    void test3() {
+
+    }
+
+    @Test
+    @DisplayName("User made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”")
+    void test4() {
+
+    }
+
+    @Test
+    @DisplayName("User made GET /offers/1000 and system returned OK(200) with offer")
+    void test5() {
+
+    }
+
+    @Test
+    @DisplayName("There are 2 new offers in external HTTP server")
+    void test6() {
+
+    }
+
+    @Test
+    @DisplayName("Scheduler ran 3rd time and made GET to external server and system added 2 new offers with ids: 3000 and 4000 to database")
+    void test7() {
+
+    }
+
+    @Test
+    @DisplayName("User made POST /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and offer and system returned CREATED(201) with saved offer")
+    void test8() {
+
+    }
+
+    @Test
+    @DisplayName("User made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 1 offer")
+    void test9() {
+
+    }
+
+    @Test
+    @DisplayName("User made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000")
+    void test10() {
+
     }
 }

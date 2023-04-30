@@ -16,19 +16,19 @@ class OffersController {
     private final OfferFacade offerFacade;
 
     @GetMapping
-    ResponseEntity<List<OfferDto>> getOffers() {
+    public ResponseEntity<List<OfferDto>> getOffers() {
         List<OfferDto> allOffers = offerFacade.findAllOffers();
         return ResponseEntity.ok(allOffers);
     }
 
     @GetMapping("/{offerId}")
-    ResponseEntity<OfferDto> getOfferById(@PathVariable String offerId) {
+    public ResponseEntity<OfferDto> getOfferById(@PathVariable String offerId) {
         OfferDto offerById = offerFacade.findOfferById(offerId);
         return ResponseEntity.ok(offerById);
     }
 
     @PostMapping
-    ResponseEntity<OfferDto> addOffers(@RequestBody OfferDto offer) {
+    public ResponseEntity<OfferDto> addOffers(@RequestBody OfferDto offer) {
         OfferDto registeredOffer = offerFacade.register(offer);
         return ResponseEntity.ok(registeredOffer);
     }

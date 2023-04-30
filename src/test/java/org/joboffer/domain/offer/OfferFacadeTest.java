@@ -105,13 +105,12 @@ class OfferFacadeTest {
 
         //then
         assertAll(
-                () -> assertThat(offersDatabaseAfterRegistration).contains(offerDto),
                 () -> assertThat(offersDatabaseAfterRegistration).hasSize(1).containsExactly(offerDto),
-                () -> assertThat(offerDto.getId()).isNotEmpty().isEqualTo("1L"),
-                () -> assertThat(offerDto.getOfferUrl()).isNotEmpty().isEqualTo("http://www.example.com"),
-                () -> assertThat(offerDto.getTitle()).isNotEmpty().isEqualTo("Scrum Master"),
-                () -> assertThat(offerDto.getCompany()).isNotEmpty().isEqualTo("Amazon"),
-                () -> assertThat(offerDto.getSalary()).isNotEmpty().isEqualTo("353651235")
+                () -> assertThat(offerDto.getId()).isEqualTo("1L"),
+                () -> assertThat(offerDto.getOfferUrl()).isEqualTo("http://www.example.com"),
+                () -> assertThat(offerDto.getTitle()).isEqualTo("Scrum Master"),
+                () -> assertThat(offerDto.getCompany()).isEqualTo("Amazon"),
+                () -> assertThat(offerDto.getSalary()).isEqualTo("353651235")
         );
     }
 
@@ -164,25 +163,25 @@ class OfferFacadeTest {
                 () -> assertThat(databaseBeforeFetching).isEmpty(),
                 () -> assertThat(fetchedOffers).hasSize(7).containsExactlyInAnyOrderElementsOf(
                         Stream.of(
-                                        new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
-                                        new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
-                                        new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
-                                        new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
-                                        new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5"),
-                                        new Offer("6L", "C# Dev", "Sii", "64363", "http://www.example.com6"),
-                                        new Offer("7L", "Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7")
+                                        new Offer("Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                                        new Offer("PO", "Apel", "1010431510", "http://www.example.com2"),
+                                        new Offer("QA", "Gogiel", "5613251", "http://www.example.com3"),
+                                        new Offer("PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                                        new Offer("C++ Dev", "Comarch", "321231", "http://www.example.com5"),
+                                        new Offer("C# Dev", "Sii", "64363", "http://www.example.com6"),
+                                        new Offer("Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7")
                                 ).map(OfferMapper::mapToOfferDto)
                                 .toList()
                 ),
                 () -> assertThat(databaseAfterFetching).hasSize(7).containsExactlyInAnyOrderElementsOf(
                         Stream.of(
-                                        new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
-                                        new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
-                                        new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
-                                        new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
-                                        new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5"),
-                                        new Offer("6L", "C# Dev", "Sii", "64363", "http://www.example.com6"),
-                                        new Offer("7L", "Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7")
+                                        new Offer("Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                                        new Offer("PO", "Apel", "1010431510", "http://www.example.com2"),
+                                        new Offer("QA", "Gogiel", "5613251", "http://www.example.com3"),
+                                        new Offer("PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                                        new Offer("C++ Dev", "Comarch", "321231", "http://www.example.com5"),
+                                        new Offer("C# Dev", "Sii", "64363", "http://www.example.com6"),
+                                        new Offer("Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7")
                                 )
                                 .map(OfferMapper::mapToOfferDto)
                                 .toList()
@@ -193,43 +192,47 @@ class OfferFacadeTest {
     @Test
     void should_fetch_and_save_only_two_offers_when_rest_of_offers_are_the_same_as_in_database() {
         //given
+        //when
         inMemoryDatabaseConfiguration();
         List<OfferDto> offersDatabaseBeforeFetching = offerFacade.findAllOffers();
-
-        //when
         List<OfferDto> fetchedOffers = offerFacade.fetchAllOffersAndSaveAllIfNotExist();
         List<OfferDto> offersDatabaseAfterFetching = offerFacade.findAllOffers();
 
         //then
         assertAll(
-                () -> assertThat(offersDatabaseBeforeFetching).hasSize(5).containsExactlyInAnyOrderElementsOf(
-                        Stream.of(
-                                        new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
-                                        new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
-                                        new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
-                                        new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
-                                        new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5")
-                                )
-                                .map(OfferMapper::mapToOfferDto)
-                                .toList()
-                ),
-                () -> assertThat(fetchedOffers).hasSize(2).containsExactlyInAnyOrder(
-                        mapToOfferDto(new Offer("6L", "C# Dev", "Sii", "64363", "http://www.example.com6")),
-                        mapToOfferDto(new Offer("7L", "Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7"))
-                ),
-                () -> assertThat(offersDatabaseAfterFetching).hasSize(7).containsExactlyInAnyOrderElementsOf(
-                        Stream.of(
-                                        new Offer("1L", "Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
-                                        new Offer("2L", "PO", "Apel", "1010431510", "http://www.example.com2"),
-                                        new Offer("3L", "QA", "Gogiel", "5613251", "http://www.example.com3"),
-                                        new Offer("4L", "PY Dev", "Media Expert", "634673", "http://www.example.com4"),
-                                        new Offer("5L", "C++ Dev", "Comarch", "321231", "http://www.example.com5"),
-                                        new Offer("6L", "C# Dev", "Sii", "64363", "http://www.example.com6"),
-                                        new Offer("7L", "Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7")
-                                )
-                                .map(OfferMapper::mapToOfferDto)
-                                .toList()
-                )
+                () -> assertThat(offersDatabaseBeforeFetching).hasSize(5)
+                        .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
+                        .containsExactlyInAnyOrderElementsOf(
+                                Stream.of(
+                                                new Offer("Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                                                new Offer("PO", "Apel", "1010431510", "http://www.example.com2"),
+                                                new Offer("QA", "Gogiel", "5613251", "http://www.example.com3"),
+                                                new Offer("PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                                                new Offer("C++ Dev", "Comarch", "321231", "http://www.example.com5")
+                                        )
+                                        .map(OfferMapper::mapToOfferDto)
+                                        .toList()
+                        ),
+                () -> assertThat(fetchedOffers).hasSize(2)
+                        .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
+                        .containsExactlyInAnyOrder(
+                                mapToOfferDto(new Offer("C# Dev", "Sii", "64363", "http://www.example.com6")),
+                                mapToOfferDto(new Offer("Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7"))
+                        ),
+                () -> assertThat(offersDatabaseAfterFetching).hasSize(7)
+                        .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
+                        .containsExactlyInAnyOrderElementsOf(
+                                Stream.of(
+                                                new Offer("Scrum Master", "Amazon", "353651235", "http://www.example.com1"),
+                                                new Offer("PO", "Apel", "1010431510", "http://www.example.com2"),
+                                                new Offer("QA", "Gogiel", "5613251", "http://www.example.com3"),
+                                                new Offer("PY Dev", "Media Expert", "634673", "http://www.example.com4"),
+                                                new Offer("C++ Dev", "Comarch", "321231", "http://www.example.com5"),
+                                                new Offer("C# Dev", "Sii", "64363", "http://www.example.com6"),
+                                                new Offer("Scala Dev", "GlobalLogic", "623622342", "http://www.example.com7"))
+                                        .map(OfferMapper::mapToOfferDto)
+                                        .toList()
+                        )
         );
     }
 

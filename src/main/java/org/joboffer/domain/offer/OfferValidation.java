@@ -31,11 +31,6 @@ class OfferValidation {
                 .anyMatch(offer -> offer.getId().equals(serchedOffer.getId()));
     }
 
-    boolean checkingIfOfferDoesNotExistsByOfferUrl(Offer offer) {
-        return repository.existsByOfferUrl(offer.getOfferUrl());
-
-    }
-
     boolean checkingIfOfferUrlIsNotNullAndUrlInNotEmpty(Offer offer) {
         return repository.findOfferByOfferUrl(offer.getOfferUrl()).isEmpty();
     }
