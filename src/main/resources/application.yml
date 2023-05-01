@@ -2,7 +2,9 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:example@mongo:27017/offers
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 offer:
   http:
