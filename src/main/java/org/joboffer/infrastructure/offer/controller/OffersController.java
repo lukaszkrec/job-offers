@@ -3,6 +3,7 @@ package org.joboffer.infrastructure.offer.controller;
 import lombok.AllArgsConstructor;
 import org.joboffer.domain.offer.OfferFacade;
 import org.joboffer.domain.offer.dto.OfferDto;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,11 @@ class OffersController {
         return ResponseEntity.ok(allOffers);
     }
 
-    @GetMapping("/{offerId}")
+    @GetMapping(value = "/{offerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OfferDto> getOfferById(@PathVariable String offerId) {
         OfferDto offerById = offerFacade.findOfferById(offerId);
-        return ResponseEntity.ok(offerById);
+        return ResponseEntity.ok()
+                .body(offerById);
     }
 
     @PostMapping

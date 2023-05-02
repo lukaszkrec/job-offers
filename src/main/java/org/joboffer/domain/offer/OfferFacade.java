@@ -38,7 +38,6 @@ public class OfferFacade {
 
     public OfferDto findOfferById(String offerId) {
         return repository.findOfferById(offerId)
-                .filter(offerValidation::checkingIfOfferWithGivenIdExist)
                 .map(OfferMapper::mapToOfferDto)
                 .orElseThrow(() -> new OfferNotFoundException("Offer with id: " + offerId + " does not exist"));
     }

@@ -20,15 +20,8 @@ class OfferValidation {
                 .anyMatch(filteredOffer -> filteredOffer.getOfferUrl().equals(offerDto.getOfferUrl()));
     }
 
-
     boolean checkingIfOfferIdIsNull(OfferDto offerDto) {
         return offerDto.getId() == null;
-    }
-
-    boolean checkingIfOfferWithGivenIdExist(Offer serchedOffer) {
-        return repository.findAll()
-                .stream()
-                .anyMatch(offer -> offer.getId().equals(serchedOffer.getId()));
     }
 
     boolean checkingIfOfferUrlIsNotNullAndUrlInNotEmpty(Offer offer) {
