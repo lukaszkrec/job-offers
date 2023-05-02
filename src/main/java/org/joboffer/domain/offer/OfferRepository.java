@@ -7,7 +7,6 @@ import java.util.Optional;
 
 @Repository
 public interface OfferRepository extends MongoRepository<Offer, String> {
-
     Optional<Offer> findOfferById(String id);
 
     Optional<Offer> findOfferByOfferUrl(String url);

@@ -6,7 +6,9 @@ import org.joboffer.domain.offer.dto.OfferDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,6 +34,12 @@ class OffersController {
     @PostMapping
     public ResponseEntity<OfferDto> addOffers(@RequestBody OfferDto offer) {
         OfferDto registeredOffer = offerFacade.register(offer);
-        return ResponseEntity.ok(registeredOffer);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(new OfferDto().getId())
+                .toUri();
+        return ResponseEntity.created(location)
+                .body(registeredOffer);
     }
 }
