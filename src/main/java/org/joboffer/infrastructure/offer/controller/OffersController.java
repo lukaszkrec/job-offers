@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -32,7 +33,7 @@ class OffersController {
     }
 
     @PostMapping
-    public ResponseEntity<OfferDto> addOffers(@RequestBody OfferDto offer) {
+    public ResponseEntity<OfferDto> addOffers(@Valid @RequestBody OfferDto offer) {
         OfferDto registeredOffer = offerFacade.register(offer);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

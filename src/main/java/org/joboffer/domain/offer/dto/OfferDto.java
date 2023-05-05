@@ -1,21 +1,25 @@
 package org.joboffer.domain.offer.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @Builder
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class OfferDto {
     private String id;
-    @NonNull
+    @NotEmpty(message = "Title is mandatory and can not be null")
     private String title;
-    @NonNull
+    @NotEmpty(message = "Company is mandatory and can not be null")
     private String company;
-    @NonNull
+    @NotEmpty(message = "Salary is mandatory and can not be null")
     private String salary;
-    @NonNull
+    @NotEmpty(message = "OfferUrl is mandatory and can not be null")
     private String offerUrl;
 }
 
