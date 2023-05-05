@@ -1,4 +1,4 @@
-package org.joboffer.infrastructure.exceptionhandling;
+package org.joboffer.infrastructure.apivalidation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,14 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-class ErrorResponse {
-    private String statusCode;
-    private OffsetDateTime date;
+class ValidationErrorResponse {
+
+    private String status;
     private String message;
-    private String description;
+    private OffsetDateTime timestamp;
+    private List<Violation> violations;
 }

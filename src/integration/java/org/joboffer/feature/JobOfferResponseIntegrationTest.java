@@ -147,7 +147,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
                           statusCode: "404 NOT_FOUND",
-                          date: "2023-05-01T17:33:47.877+02:00",
+                          timestamp: "2023-05-01T17:33:47.877+02:00",
                           message: "Offer with id: 9999 does not exist",
                           description: "uri=/offers/9999"
                         }
@@ -291,7 +291,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
         //when
         mvc.perform(post("/offers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(offerDto)))
+                        .content(objectMapper.writeValueAsString(offerDto)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -384,13 +384,5 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
         assertAll(
                 () -> Mockito.verify(offerFacade, times(1)).findAllOffers()
         );
-    }
-
-    private String asJsonString(final Object object) {
-        try {
-            return objectMapper.writeValueAsString(object);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

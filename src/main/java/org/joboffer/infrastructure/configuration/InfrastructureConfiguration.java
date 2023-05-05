@@ -1,4 +1,4 @@
-package org.joboffer.infrastructure.exceptionhandling;
+package org.joboffer.infrastructure.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
