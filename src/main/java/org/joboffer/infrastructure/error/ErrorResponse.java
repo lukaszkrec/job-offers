@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 class ErrorResponse {
-    private String errorStatus;
+    private String status;
     private OffsetDateTime timestamp;
     private String message;
     private String description;

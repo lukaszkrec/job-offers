@@ -15,7 +15,7 @@ import java.util.List;
 
 @ControllerAdvice
 @AllArgsConstructor
-public class ErrorHandlingControllerAdvice {
+public class ApiValidationErrorHandler {
 
     private final Clock clock;
 

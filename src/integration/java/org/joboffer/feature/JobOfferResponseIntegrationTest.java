@@ -9,18 +9,28 @@ import org.joboffer.SampleJobOfferResponse;
 import org.joboffer.domain.offer.OfferFacade;
 import org.joboffer.domain.offer.OfferNotFoundException;
 import org.joboffer.domain.offer.OfferRepository;
+import org.joboffer.domain.offer.PrimarySequenceRepository;
 import org.joboffer.domain.offer.dto.OfferDto;
 import org.joboffer.infrastructure.offer.scheduler.OfferFetcherScheduler;
+import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
@@ -29,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements SampleJobOfferResponse {
 
@@ -41,6 +52,14 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     @Autowired
     OfferRepository offerRepository;
 
+    @Autowired
+    PrimarySequenceRepository sequenceRepository;
+
+    @AfterEach
+    void tearDown() {
+        offerRepository.deleteAll();
+        sequenceRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("User tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)")
@@ -137,16 +156,16 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
 
     @Test
     @DisplayName("User made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”")
-    void should_return_NOT_FOUND_404_when_offer_with_provided_id_does_not_exist() throws Exception {
+    void should_return_NOT_FOUND_404_when_offer_with_provided__id_does_not_exist() throws Exception {
         //given , when
         final String searchedOfferId = "9999";
         mvc.perform(get("/offers/{offerId}", searchedOfferId)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .content(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
-                          statusCode: "404 NOT_FOUND",
+                          status: "404 NOT_FOUND",
                           timestamp: "2023-05-01T17:33:47.877+02:00",
                           message: "Offer with id: 9999 does not exist",
                           description: "uri=/offers/9999"
@@ -256,34 +275,6 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
-    @DisplayName("Scheduler run and made GET to external server and system added 4 new offers with ids: 1000, 2000, 3000 and 4000 to database")
-    void should_save_four_offers_into_database_with_sequential_id_when_there_are_four_offers_in_external_server() {
-        //given
-        wireMockServer.stubFor(WireMock.get("/offers")
-                .willReturn(WireMock.aResponse()
-                        .withStatus(HttpStatus.OK.value())
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(bodyWithFourOffersJson())));
-
-        //when, then
-        List<OfferDto> offersFromExternalServerResponse = fetcherScheduler.scheduleOfferFetcher();
-        OfferDto offerDto1 = offersFromExternalServerResponse.get(0);
-        OfferDto offerDto2 = offersFromExternalServerResponse.get(1);
-        OfferDto offerDto3 = offersFromExternalServerResponse.get(2);
-        OfferDto offerDto4 = offersFromExternalServerResponse.get(3);
-
-        assertAll(
-                () -> Assertions.assertThat(offerDto1.getId()).isEqualTo("1000"),
-                () -> Assertions.assertThat(offerDto2.getId()).isEqualTo("2000"),
-                () -> Assertions.assertThat(offerDto3.getId()).isEqualTo("3000"),
-                () -> Assertions.assertThat(offerDto4.getId()).isEqualTo("4000"),
-                () -> Assertions.assertThat(offersFromExternalServerResponse).hasSize(4),
-                () -> Assertions.assertThat(offerRepository.findAll()).hasSize(4),
-                () -> Mockito.verify(offerFacade, times(1)).fetchAllOffersAndSaveAllIfNotExist()
-        );
-    }
-
-    @Test
     @DisplayName("User made POST /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and offer and system returned CREATED(201) with saved offer")
     void should_create_an_offer_when_provided_offer_parameters_are_correct() throws Exception {
         //given
@@ -383,6 +374,34 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
 
         assertAll(
                 () -> Mockito.verify(offerFacade, times(1)).findAllOffers()
+        );
+    }
+
+    @Test
+    @DisplayName("Scheduler run and made GET to external server and system added 4 new offers with ids: 1000, 2000, 3000 and 4000 to database")
+    void should_save_four_offers_into_database_with_sequential_id_when_there_are_four_offers_in_external_server() {
+        //given
+        wireMockServer.stubFor(WireMock.get("/offers")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyWithFourOffersJson())));
+
+        //when, then
+        List<OfferDto> offersFromExternalServerResponse = fetcherScheduler.scheduleOfferFetcher();
+        OfferDto offerDto1 = offersFromExternalServerResponse.get(0);
+        OfferDto offerDto2 = offersFromExternalServerResponse.get(1);
+        OfferDto offerDto3 = offersFromExternalServerResponse.get(2);
+        OfferDto offerDto4 = offersFromExternalServerResponse.get(3);
+
+        assertAll(
+                () -> Assertions.assertThat(offerRepository.findAll()).hasSize(4),
+                () -> Assertions.assertThat(offersFromExternalServerResponse).hasSize(4),
+                () -> Assertions.assertThat(offerDto1.getId()).isEqualTo("1000"),
+                () -> Assertions.assertThat(offerDto2.getId()).isEqualTo("2000"),
+                () -> Assertions.assertThat(offerDto3.getId()).isEqualTo("3000"),
+                () -> Assertions.assertThat(offerDto4.getId()).isEqualTo("4000"),
+                () -> Mockito.verify(offerFacade, times(1)).fetchAllOffersAndSaveAllIfNotExist()
         );
     }
 }

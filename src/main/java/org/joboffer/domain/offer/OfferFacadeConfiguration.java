@@ -2,6 +2,7 @@ package org.joboffer.domain.offer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoOperations;
 
 @Configuration
 class OfferFacadeConfiguration {
@@ -10,5 +11,11 @@ class OfferFacadeConfiguration {
     OfferFacade offerFacade(OfferRepository repository, OfferFetcher offerFetcher) {
         final OfferValidation validation = new OfferValidation(repository);
         return new OfferFacade(repository, validation, offerFetcher);
+    }
+
+    @Bean
+    CustomerListener customerListener(MongoOperations mongoOperations) {
+        final PrimarySequenceService sequenceService = new PrimarySequenceService(mongoOperations);
+        return new CustomerListener(sequenceService);
     }
 }

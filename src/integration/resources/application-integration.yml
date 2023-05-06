@@ -10,4 +10,5 @@ scheduling:
 logging:
   level:
     org.springframework.web: DEBUG
+    org.springframework.data: DEBUG
 #    org.springframework.security: DEBUG
