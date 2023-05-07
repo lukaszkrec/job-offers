@@ -9,31 +9,26 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 
 @Configuration
-class OfferFetcherClientConfig {
-
-    private final HttpClientConnectionConfigurationProperties properties;
-
-    OfferFetcherClientConfig(HttpClientConnectionConfigurationProperties properties) {
-        this.properties = properties;
-    }
+public class OfferFetcherClientConfig {
 
     @Bean
     public RestTemplateResponseErrorHandler restTemplateResponseErrorHandler() {
         return new RestTemplateResponseErrorHandler();
     }
 
-
     @Bean
-    public RestTemplate restTemplate(RestTemplateResponseErrorHandler restTemplateResponseErrorHandler) {
+    public RestTemplate restTemplate(HttpClientConnectionConfigurationProperties properties) {
         return new RestTemplateBuilder()
-                .errorHandler(restTemplateResponseErrorHandler)
+                .errorHandler(restTemplateResponseErrorHandler())
                 .setConnectTimeout(Duration.ofMillis(properties.connectionTimeout()))
                 .setReadTimeout(Duration.ofMillis(properties.readTimeout()))
                 .build();
     }
 
     @Bean
-    public OfferFetcher remoteOfferFetcherClient(RestTemplate restTemplate) {
+    public OfferFetcher remoteOfferFetcherClient(RestTemplate restTemplate,
+                                                 HttpClientConnectionConfigurationProperties properties
+    ) {
         return new OfferFetcherRestTemplate(restTemplate, properties.uri(), properties.port());
     }
 }
