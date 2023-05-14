@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OfferDto {
+public class OfferDto implements Serializable {
     private String id;
     @NotEmpty(message = "Title is mandatory and can not be null")
     private String title;

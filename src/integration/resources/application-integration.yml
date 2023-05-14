@@ -1,3 +1,9 @@
+spring:
+  cache:
+    type: none
+    redis:
+      time-to-live: PT10s
+
 offer:
   http:
     client:
@@ -6,9 +12,3 @@ offer:
 
 scheduling:
   enabled: false
-
-logging:
-  level:
-    org.springframework.web: DEBUG
-    org.springframework.data: DEBUG
-#    org.springframework.security: DEBUG

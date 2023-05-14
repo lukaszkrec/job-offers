@@ -2,6 +2,7 @@ package org.joboffer.domain.offer;
 
 import lombok.AllArgsConstructor;
 import org.joboffer.domain.offer.dto.OfferDto;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class OfferFacade {
         return mapToOfferDto(mappedOffer);
     }
 
+    @Cacheable("jobOffers")
     public List<OfferDto> findAllOffers() {
         return repository.findAll().stream()
                 .map(OfferMapper::mapToOfferDto)

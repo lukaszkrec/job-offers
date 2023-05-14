@@ -31,5 +31,4 @@ class PrimarySequenceService {
         }
         return primarySequence.getSeq();
     }
-
 }
