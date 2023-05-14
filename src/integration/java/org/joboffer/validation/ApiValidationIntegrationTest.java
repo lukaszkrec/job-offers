@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class ApiValidationIntegrationTest extends BaseIntegrationTest {
 
     @Test
+    @WithMockUser
     void should_throw_an_MethodArgumentNotValidException_with_every_error_message_when_user_provide_offer_with_empty_body() throws Exception {
         //given
         OfferDto notAllowedOfferDto = new OfferDto();
@@ -55,6 +57,7 @@ class ApiValidationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser
     void should_throw_an_MethodArgumentNotValidException_when_user_provide_offer_with_empty_salary_field() throws Exception {
         //given, when
         mvc.perform(post("/offers")
@@ -82,6 +85,7 @@ class ApiValidationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser
     void should_throw_an_MethodArgumentNotValidException_when_user_provide_offer_with_null_salary_field() throws Exception {
         //given
         OfferDto notValidOfferWithNullSalaryField = OfferDto.builder()

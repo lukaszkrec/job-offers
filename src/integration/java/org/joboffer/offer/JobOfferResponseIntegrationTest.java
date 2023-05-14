@@ -1,4 +1,4 @@
-package org.joboffer.feature;
+package org.joboffer.offer;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -6,40 +6,38 @@ import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.joboffer.BaseIntegrationTest;
 import org.joboffer.SampleJobOfferResponse;
+import org.joboffer.domain.loginandregister.dto.RegistrationResultDto;
 import org.joboffer.domain.offer.OfferFacade;
 import org.joboffer.domain.offer.OfferNotFoundException;
 import org.joboffer.domain.offer.OfferRepository;
 import org.joboffer.domain.offer.PrimarySequenceRepository;
 import org.joboffer.domain.offer.dto.OfferDto;
+import org.joboffer.infrastructure.loginandregister.dto.JwtResponseDto;
 import org.joboffer.infrastructure.offer.scheduler.OfferFetcherScheduler;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.context.WebApplicationContext;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements SampleJobOfferResponse {
 
@@ -121,6 +119,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
+    @WithMockUser
     @DisplayName("User made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 0 offers")
     void should_return_empty_list_of_offers_when_user_want_to_get_all_offers_and_external_server_doesnt_have_any_offers() throws Exception {
         //given
@@ -155,6 +154,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
+    @WithMockUser
     @DisplayName("User made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”")
     void should_return_NOT_FOUND_404_when_offer_with_provided__id_does_not_exist() throws Exception {
         //given , when
@@ -182,6 +182,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
+    @WithMockUser
     @DisplayName("There are 2 new offers in external HTTP server")
     void should_fetch_two_offers_when_there_are_two_offers_in_external_http_server() throws Exception {
         //given
@@ -195,12 +196,12 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
         Assertions.assertThat(offersFromExternalServer).hasSize(2);
 
         //when
-        MvcResult mvcResult = mvc.perform(get("/offers"))
+        MvcResult mvcResultOffer = mvc.perform(get("/offers"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        String responseWithNoOffers = mvcResult.getResponse().getContentAsString();
+        String responseWithNoOffers = mvcResultOffer.getResponse().getContentAsString();
         List<OfferDto> offerResponse = objectMapper.readValue(responseWithNoOffers, new TypeReference<>() {
         });
 
@@ -213,6 +214,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
+    @WithMockUser
     @DisplayName("User made GET /offers/1000 and system returned OK(200) with offer")
     void should_return_an_offer_found_by_id_when_offer_exist_with_provided_id() throws Exception {
         //given
@@ -275,6 +277,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
+    @WithMockUser
     @DisplayName("User made POST /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and offer and system returned CREATED(201) with saved offer")
     void should_create_an_offer_when_provided_offer_parameters_are_correct() throws Exception {
         //given
@@ -302,6 +305,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
+    @WithMockUser
     @DisplayName("User made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 1 offer")
     void should_return_list_of_one_offer_from_database_when_one_offer_exist_in_database() throws Exception {
         //given
@@ -334,6 +338,7 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
+    @WithMockUser
     @DisplayName("User made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000")
     void should_return_list_of_two_offers_from_database_when_two_offers_exist_in_database() throws Exception {
         //given

@@ -1,4 +1,4 @@
-package org.joboffer.infrastructure.apivalidation;
+package org.joboffer.infrastructure.offer.apivalidation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

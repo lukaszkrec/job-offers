@@ -14,8 +14,8 @@ class OfferFacadeConfiguration {
     }
 
     @Bean
-    CustomerListener customerListener(MongoOperations mongoOperations) {
+    OfferIdentifierListener customerListener(MongoOperations mongoOperations) {
         final PrimarySequenceService sequenceService = new PrimarySequenceService(mongoOperations);
-        return new CustomerListener(sequenceService);
+        return new OfferIdentifierListener(sequenceService);
     }
 }

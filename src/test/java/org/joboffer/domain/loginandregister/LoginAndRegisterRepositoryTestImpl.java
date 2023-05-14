@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @AllArgsConstructor
@@ -19,8 +16,13 @@ class LoginAndRegisterRepositoryTestImpl implements LoginAndRegisterRepository {
     private final Map<String, User> users = new HashMap<>();
 
     @Override
-    public User save(User user) {
-        users.put(user.getId(), user);
+    public User save(User userToSave) {
+        User user;
+        if (!(userToSave.getId() == null)) {
+            user = users.put(userToSave.getId(), userToSave);
+        } else {
+            user = users.put(UUID.randomUUID().toString(), userToSave);
+        }
         return user;
     }
 

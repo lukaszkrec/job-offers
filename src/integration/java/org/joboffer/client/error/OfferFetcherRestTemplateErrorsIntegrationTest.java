@@ -132,7 +132,7 @@ class OfferFetcherRestTemplateErrorsIntegrationTest implements SampleJobOfferRes
     }
 
     @Test
-    void should_throw_exception_204_when_status_is_204_no_content() {
+    void should_throw_NO_CONTENT_204_when_status_is_204_no_content() {
         // given
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()

@@ -1,4 +1,4 @@
-package org.joboffer.infrastructure.error;
+package org.joboffer.infrastructure.offer.error;
 
 import lombok.AllArgsConstructor;
 

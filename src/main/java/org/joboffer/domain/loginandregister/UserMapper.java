@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 import org.joboffer.domain.loginandregister.dto.UserDto;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserDtoMapper {
+public class UserMapper {
 
-    static UserDto mapToUserDto(User user) {
+    public static UserDto mapToUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -16,11 +16,11 @@ public class UserDtoMapper {
 
     }
 
-    static User mapToUser(UserDto dto) {
+    public static User mapToUser(UserDto dto) {
         return User.builder()
-                .id(dto.getId())
-                .username(dto.getUsername())
-                .password(dto.getPassword())
+                .id(dto.id())
+                .username(dto.username())
+                .password(dto.password())
                 .build();
     }
 }

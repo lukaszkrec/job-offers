@@ -1,4 +1,4 @@
-package org.joboffer.infrastructure.apivalidation;
+package org.joboffer.infrastructure.offer.apivalidation;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class ApiValidationErrorHandler {
 
         return ValidationErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.toString())
-                .message(String.format("Validation failed for object='%s'"))
+                .message(constraintViolationException.getMessage())
                 .timestamp(OffsetDateTime.now(clock))
                 .violations(List.of(Violation.builder()
                         .constraintPropertyPath(propertyPath)
