@@ -7,17 +7,17 @@ import static org.springframework.data.mongodb.core.FindAndModifyOptions.options
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
-public class PrimarySequenceService {
+class PrimarySequenceService {
 
     private static final String PRIMARY_SEQUENCE = "primarySequence";
 
     private final MongoOperations mongoOperations;
 
-    public PrimarySequenceService(final MongoOperations mongoOperations) {
+    PrimarySequenceService(final MongoOperations mongoOperations) {
         this.mongoOperations = mongoOperations;
     }
 
-    public long getNextValue() {
+    long getNextValue() {
         PrimarySequence primarySequence = mongoOperations.findAndModify(
                 query(where("_id").is(PRIMARY_SEQUENCE)),
                 new Update().inc("seq", 1000),

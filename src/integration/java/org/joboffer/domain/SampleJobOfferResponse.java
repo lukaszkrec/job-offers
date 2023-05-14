@@ -1,4 +1,4 @@
-package org.joboffer;
+package org.joboffer.domain;
 
 public interface SampleJobOfferResponse {
 

@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 import org.joboffer.domain.offer.dto.OfferDto;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OfferMapper {
+class OfferMapper {
 
-    public static OfferDto mapToOfferDto(Offer offer) {
+    static OfferDto mapToOfferDto(Offer offer) {
         return OfferDto.builder()
                 .id(offer.getId())
                 .title(offer.getTitle())
@@ -17,7 +17,7 @@ public class OfferMapper {
                 .build();
     }
 
-    public static Offer mapToOffer(OfferDto dto) {
+    static Offer mapToOffer(OfferDto dto) {
         return Offer.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())

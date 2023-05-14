@@ -1,18 +1,12 @@
-package org.joboffer.offer;
+package org.joboffer.domain.offer;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
-import org.joboffer.BaseIntegrationTest;
-import org.joboffer.SampleJobOfferResponse;
-import org.joboffer.domain.loginandregister.dto.RegistrationResultDto;
-import org.joboffer.domain.offer.OfferFacade;
-import org.joboffer.domain.offer.OfferNotFoundException;
-import org.joboffer.domain.offer.OfferRepository;
-import org.joboffer.domain.offer.PrimarySequenceRepository;
+import org.joboffer.domain.BaseIntegrationTest;
+import org.joboffer.domain.SampleJobOfferResponse;
 import org.joboffer.domain.offer.dto.OfferDto;
-import org.joboffer.infrastructure.loginandregister.dto.JwtResponseDto;
 import org.joboffer.infrastructure.offer.scheduler.OfferFetcherScheduler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,20 +18,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements SampleJobOfferResponse {
 

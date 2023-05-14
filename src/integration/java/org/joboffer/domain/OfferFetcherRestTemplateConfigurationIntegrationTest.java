@@ -1,4 +1,4 @@
-package org.joboffer;
+package org.joboffer.domain;
 
 import org.joboffer.domain.offer.OfferFetcher;
 import org.joboffer.infrastructure.offer.http.HttpClientConnectionConfigurationProperties;

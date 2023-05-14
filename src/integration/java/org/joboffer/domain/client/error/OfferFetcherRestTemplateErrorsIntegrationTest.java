@@ -1,11 +1,11 @@
-package org.joboffer.client.error;
+package org.joboffer.domain.client.error;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.assertj.core.api.Assertions;
-import org.joboffer.OfferFetcherRestTemplateConfigurationIntegrationTest;
-import org.joboffer.SampleJobOfferResponse;
+import org.joboffer.domain.OfferFetcherRestTemplateConfigurationIntegrationTest;
+import org.joboffer.domain.SampleJobOfferResponse;
 import org.joboffer.domain.offer.OfferFetcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.joboffer.BaseIntegrationTest.WIRE_MOCK_HOST;
+import static org.joboffer.domain.BaseIntegrationTest.WIRE_MOCK_HOST;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

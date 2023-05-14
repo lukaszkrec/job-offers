@@ -1,9 +1,10 @@
-package org.joboffer.feature;
+package org.joboffer.domain.feature;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import org.joboffer.BaseIntegrationTest;
-import org.joboffer.SampleJobOfferResponse;
+
+import org.joboffer.domain.BaseIntegrationTest;
+import org.joboffer.domain.SampleJobOfferResponse;
 import org.joboffer.domain.loginandregister.dto.RegistrationResultDto;
 import org.joboffer.domain.offer.dto.OfferDto;
 import org.joboffer.infrastructure.loginandregister.dto.JwtResponseDto;

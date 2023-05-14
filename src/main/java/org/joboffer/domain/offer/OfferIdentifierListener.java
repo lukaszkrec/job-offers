@@ -4,11 +4,11 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 
 
-public class OfferIdentifierListener extends AbstractMongoEventListener<Offer> {
+class OfferIdentifierListener extends AbstractMongoEventListener<Offer> {
 
     private final PrimarySequenceService primarySequenceService;
 
-    public OfferIdentifierListener(final PrimarySequenceService primarySequenceService) {
+    OfferIdentifierListener(final PrimarySequenceService primarySequenceService) {
         this.primarySequenceService = primarySequenceService;
     }
 

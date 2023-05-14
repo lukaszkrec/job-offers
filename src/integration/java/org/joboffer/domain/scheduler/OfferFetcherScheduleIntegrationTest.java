@@ -1,6 +1,6 @@
-package org.joboffer.scheduler;
+package org.joboffer.domain.scheduler;
 
-import org.joboffer.BaseIntegrationTest;
+import org.joboffer.domain.BaseIntegrationTest;
 import org.joboffer.JobOfferSpringBootApplication;
 import org.joboffer.domain.offer.OfferFetcher;
 import org.junit.jupiter.api.Test;

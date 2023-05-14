@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document
-public class PrimarySequence {
+class PrimarySequence {
     @Id
     private String id;
     private long seq;

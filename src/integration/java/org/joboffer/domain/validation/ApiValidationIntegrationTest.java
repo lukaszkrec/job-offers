@@ -1,23 +1,16 @@
-package org.joboffer.validation;
+package org.joboffer.domain.validation;
 
 import org.hamcrest.Matchers;
-import org.joboffer.BaseIntegrationTest;
-import org.joboffer.domain.offer.OfferFacade;
+import org.joboffer.domain.BaseIntegrationTest;
 import org.joboffer.domain.offer.dto.OfferDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 class ApiValidationIntegrationTest extends BaseIntegrationTest {
