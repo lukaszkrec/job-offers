@@ -19,11 +19,11 @@ class OfferMapper {
 
     static Offer mapToOffer(OfferDto dto) {
         return Offer.builder()
-                .id(dto.getId())
-                .title(dto.getTitle())
-                .company(dto.getCompany())
-                .salary(dto.getSalary())
-                .offerUrl(dto.getOfferUrl())
+                .id(dto.id())
+                .title(dto.title())
+                .company(dto.company())
+                .salary(dto.salary())
+                .offerUrl(dto.offerUrl())
                 .build();
     }
 }

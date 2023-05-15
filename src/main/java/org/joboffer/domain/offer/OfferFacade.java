@@ -20,11 +20,11 @@ public class OfferFacade {
         if (offerValidation.checkingIfOfferIdIsNull(offer)) {
             throw new OfferParametersCredentialException("Offer id can not be: " + null);
         }
-        if (offerValidation.checkingIfOfferExistsWithSameId(offer.getId())) {
-            throw new OfferParametersCredentialException("Offer with id: " + offer.getId() + " already exists");
+        if (offerValidation.checkingIfOfferExistsWithSameId(offer.id())) {
+            throw new OfferParametersCredentialException("Offer with id: " + offer.id() + " already exists");
         }
         if (offerValidation.checkingIfOffersWithGivenUrlAlreadyExist(offer)) {
-            throw new DuplicatedKeyException("Offer with the same url: " + offer.getOfferUrl() + " already exists");
+            throw new DuplicatedKeyException("Offer with the same url: " + offer.offerUrl() + " already exists");
         }
         Offer mappedOffer = mapToOffer(offer);
         repository.save(mappedOffer);

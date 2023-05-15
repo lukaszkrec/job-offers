@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 @Configuration
-public class InfrastructureConfiguration {
+public class InfrastructureClockConfiguration {
     @Bean
     Clock clock() {
         return Clock.fixed(Instant.now(), ZoneId.systemDefault());

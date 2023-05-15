@@ -3,7 +3,6 @@ package org.joboffer.infrastructure.offer.http;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joboffer.domain.offer.OfferFetcher;
-import org.joboffer.domain.offer.OfferNotFoundException;
 import org.joboffer.domain.offer.dto.OfferDto;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;

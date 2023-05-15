@@ -54,7 +54,7 @@ class OfferFacadeTest {
         assertAll(
                 () -> assertThatRuntimeException()
                         .isThrownBy(() -> offerFacade.register(offerDto3))
-                        .withMessage("Offer with the same url: " + offerDto3.getOfferUrl() + " already exists"),
+                        .withMessage("Offer with the same url: " + offerDto3.offerUrl() + " already exists"),
                 () -> assertThat(offerFacade.findAllOffers()).hasSize(2)
                         .containsExactlyInAnyOrder(offerDto1, offerDto2)
         );
@@ -106,11 +106,11 @@ class OfferFacadeTest {
         //then
         assertAll(
                 () -> assertThat(offersDatabaseAfterRegistration).hasSize(1).containsExactly(offerDto),
-                () -> assertThat(offerDto.getId()).isEqualTo("1L"),
-                () -> assertThat(offerDto.getOfferUrl()).isEqualTo("http://www.example.com"),
-                () -> assertThat(offerDto.getTitle()).isEqualTo("Scrum Master"),
-                () -> assertThat(offerDto.getCompany()).isEqualTo("Amazon"),
-                () -> assertThat(offerDto.getSalary()).isEqualTo("353651235")
+                () -> assertThat(offerDto.id()).isEqualTo("1L"),
+                () -> assertThat(offerDto.offerUrl()).isEqualTo("http://www.example.com"),
+                () -> assertThat(offerDto.title()).isEqualTo("Scrum Master"),
+                () -> assertThat(offerDto.company()).isEqualTo("Amazon"),
+                () -> assertThat(offerDto.salary()).isEqualTo("353651235")
         );
     }
 
@@ -126,7 +126,7 @@ class OfferFacadeTest {
                 () -> assertThatRuntimeException()
                         .isThrownBy(() -> offerFacade.register(offerDto))
                         .withMessage("Offer id can not be: " + null),
-                () -> assertThat(offerDto.getId()).isNull()
+                () -> assertThat(offerDto.id()).isNull()
         );
 
     }
@@ -144,7 +144,7 @@ class OfferFacadeTest {
                         .isThrownBy(() -> {
                             offerFacade.register(offer1);
                             offerFacade.register(offer2);
-                        }).withMessage("Offer with id: " + offer2.getId() + " already exists"),
+                        }).withMessage("Offer with id: " + offer2.id() + " already exists"),
                 () -> assertThat(offerFacade.findAllOffers()).hasSize(1).containsExactlyInAnyOrder(offer1)
         );
     }

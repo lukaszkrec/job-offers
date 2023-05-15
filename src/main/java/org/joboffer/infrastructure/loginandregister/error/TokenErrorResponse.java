@@ -1,9 +1,12 @@
 package org.joboffer.infrastructure.loginandregister.error;
 
 import lombok.Builder;
-import org.springframework.http.HttpStatus;
+
+import java.time.OffsetDateTime;
 
 @Builder
-public record TokenErrorResponse(String message,
-                                 HttpStatus status) {
+public record TokenErrorResponse(String status,
+                                 OffsetDateTime timestamp,
+                                 String message,
+                                 String description) {
 }

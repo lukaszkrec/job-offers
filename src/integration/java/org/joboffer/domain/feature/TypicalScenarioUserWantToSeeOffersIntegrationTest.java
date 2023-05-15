@@ -2,7 +2,6 @@ package org.joboffer.domain.feature;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.WireMock;
-
 import org.joboffer.domain.BaseIntegrationTest;
 import org.joboffer.domain.SampleJobOfferResponse;
 import org.joboffer.domain.loginandregister.dto.RegistrationResultDto;
@@ -81,8 +80,10 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().json("""
                         {
-                          "message": "Bad Credentials",
-                          "status": "UNAUTHORIZED"
+                            "status": "401 UNAUTHORIZED",
+                            "timestamp": "2023-05-01T17:33:47.877+02:00",
+                            "message": "User with username: someUser does not exist",
+                            "description":"uri=/token"
                         }
                         """.trim()));
 
@@ -192,11 +193,11 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
         // given
         // when
-        ResultActions performGetOffersNotExisitingId = mvc.perform(get("/offers/9999")
+        ResultActions performGetOffersNotExistingId = mvc.perform(get("/offers/9999")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
         // then
-        performGetOffersNotExisitingId.andExpect(status().isNotFound())
+        performGetOffersNotExistingId.andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
                         "message":  "Offer with id: 9999 does not exist",
@@ -207,7 +208,7 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
         //step 12: user made GET /offers/1000 and system returned OK(200) with offer
         // given
-        String offerIdAddedToDatabase = expectedFirstOffer.getId();
+        String offerIdAddedToDatabase = expectedFirstOffer.id();
         // when
         ResultActions getOfferById = mvc.perform(get("/offers/" + offerIdAddedToDatabase)
                 .header("Authorization", "Bearer " + token)
@@ -277,12 +278,12 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .getContentAsString();
 
         OfferDto parsedCreatedOfferJson = objectMapper.readValue(createdOfferJson, OfferDto.class);
-        String id = parsedCreatedOfferJson.getId();
+        String id = parsedCreatedOfferJson.id();
         assertAll(
-                () -> assertThat(parsedCreatedOfferJson.getOfferUrl()).isEqualTo("https://newoffers.pl/offer/1234"),
-                () -> assertThat(parsedCreatedOfferJson.getCompany()).isEqualTo("someCompany"),
-                () -> assertThat(parsedCreatedOfferJson.getSalary()).isEqualTo("7 000 - 9 000 PLN"),
-                () -> assertThat(parsedCreatedOfferJson.getTitle()).isEqualTo("someTitle"),
+                () -> assertThat(parsedCreatedOfferJson.offerUrl()).isEqualTo("https://newoffers.pl/offer/1234"),
+                () -> assertThat(parsedCreatedOfferJson.company()).isEqualTo("someCompany"),
+                () -> assertThat(parsedCreatedOfferJson.salary()).isEqualTo("7 000 - 9 000 PLN"),
+                () -> assertThat(parsedCreatedOfferJson.title()).isEqualTo("someTitle"),
                 () -> assertThat(id).isNotNull()
         );
 
@@ -301,6 +302,6 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         List<OfferDto> parsedJsonWithOneOffer = objectMapper.readValue(oneOfferJson, new TypeReference<>() {
         });
         assertThat(parsedJsonWithOneOffer).hasSize(5);
-        assertThat(parsedJsonWithOneOffer.stream().map(OfferDto::getId)).contains(id);
+        assertThat(parsedJsonWithOneOffer.stream().map(OfferDto::id)).contains(id);
     }
 }

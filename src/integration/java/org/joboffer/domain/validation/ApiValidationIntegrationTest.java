@@ -19,7 +19,7 @@ class ApiValidationIntegrationTest extends BaseIntegrationTest {
     @WithMockUser
     void should_throw_an_MethodArgumentNotValidException_with_every_error_message_when_user_provide_offer_with_empty_body() throws Exception {
         //given
-        OfferDto notAllowedOfferDto = new OfferDto();
+        OfferDto notAllowedOfferDto = OfferDto.builder().build();
         //when, then
         mvc.perform(post("/offers")
                         .contentType(MediaType.APPLICATION_JSON)

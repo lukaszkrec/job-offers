@@ -17,11 +17,11 @@ class OfferValidation {
     boolean checkingIfOffersWithGivenUrlAlreadyExist(OfferDto offerDto) {
         return repository.findAll()
                 .stream()
-                .anyMatch(filteredOffer -> filteredOffer.getOfferUrl().equals(offerDto.getOfferUrl()));
+                .anyMatch(filteredOffer -> filteredOffer.getOfferUrl().equals(offerDto.offerUrl()));
     }
 
     boolean checkingIfOfferIdIsNull(OfferDto offerDto) {
-        return offerDto.getId() == null;
+        return offerDto.id() == null;
     }
 
     boolean checkingIfOfferUrlIsNotNullAndUrlInNotEmpty(Offer offer) {

@@ -50,27 +50,6 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
     }
 
     @Test
-    @DisplayName("User tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)")
-    void test11() {
-    }
-
-    @Test
-    @DisplayName("User made GET /offers with no jwt token and system returned UNAUTHORIZED(401)")
-    void test12() {
-    }
-
-    @Test
-    @DisplayName("User made POST /register with username=someUser, password=somePassword and system registered user with status OK(200)")
-    void test13() {
-    }
-
-    @Test
-    @DisplayName("User tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC")
-    void test14() {
-    }
-
-
-    @Test
     @DisplayName("There are no offers in external HTTP server (http://ec2-3-120-147-150.eu-central-1.compute.amazonaws.com:5057/offers)")
     void should_return_empty_response_when_there_are_no_offers_in_external_http_server() {
         //given
@@ -212,11 +191,11 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
         OfferDto offerDto = new OfferDto(searchedOfferId, "Junior Java Developer", "BlueSoft Sp. z o.o.", "7 000 – 9 000 PLN", "https://nofluffjobs.com/pl/job/junior-java-developer-bluesoft-remote-hfuanrre");
         OfferDto registeredOffer = offerFacade.register(offerDto);
         assertAll(
-                () -> Assertions.assertThat(registeredOffer.getId()).isEqualTo(searchedOfferId),
-                () -> Assertions.assertThat(registeredOffer.getTitle()).isEqualTo("Junior Java Developer"),
-                () -> Assertions.assertThat(registeredOffer.getCompany()).isEqualTo("BlueSoft Sp. z o.o."),
-                () -> Assertions.assertThat(registeredOffer.getSalary()).isEqualTo("7 000 – 9 000 PLN"),
-                () -> Assertions.assertThat(registeredOffer.getOfferUrl()).isEqualTo("https://nofluffjobs.com/pl/job/junior-java-developer-bluesoft-remote-hfuanrre"),
+                () -> Assertions.assertThat(registeredOffer.id()).isEqualTo(searchedOfferId),
+                () -> Assertions.assertThat(registeredOffer.title()).isEqualTo("Junior Java Developer"),
+                () -> Assertions.assertThat(registeredOffer.company()).isEqualTo("BlueSoft Sp. z o.o."),
+                () -> Assertions.assertThat(registeredOffer.salary()).isEqualTo("7 000 – 9 000 PLN"),
+                () -> Assertions.assertThat(registeredOffer.offerUrl()).isEqualTo("https://nofluffjobs.com/pl/job/junior-java-developer-bluesoft-remote-hfuanrre"),
                 () -> Assertions.assertThat(offerRepository.findAll()).hasSize(1)
         );
 
@@ -258,8 +237,8 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
         OfferDto offerDto1 = offersFromExternalServerResponse.get(0);
         OfferDto offerDto2 = offersFromExternalServerResponse.get(1);
         assertAll(
-                () -> Assertions.assertThat(offerDto1.getId()).isEqualTo("1000"),
-                () -> Assertions.assertThat(offerDto2.getId()).isEqualTo("2000"),
+                () -> Assertions.assertThat(offerDto1.id()).isEqualTo("1000"),
+                () -> Assertions.assertThat(offerDto2.id()).isEqualTo("2000"),
                 () -> Assertions.assertThat(offersFromExternalServerResponse).hasSize(2),
                 () -> Assertions.assertThat(offerRepository.findAll()).hasSize(2),
                 () -> Mockito.verify(offerFacade, times(1)).fetchAllOffersAndSaveAllIfNotExist()
@@ -302,11 +281,11 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
         OfferDto offerDto = new OfferDto("1000", "Junior Java Developer", "BlueSoft Sp. z o.o.", "7 000 – 9 000 PLN", "https://nofluffjobs.com/pl/job/junior-java-developer-bluesoft-remote-hfuanrre");
         OfferDto registeredOffer = offerFacade.register(offerDto);
         assertAll(
-                () -> Assertions.assertThat(registeredOffer.getId()).isEqualTo("1000"),
-                () -> Assertions.assertThat(registeredOffer.getTitle()).isEqualTo("Junior Java Developer"),
-                () -> Assertions.assertThat(registeredOffer.getCompany()).isEqualTo("BlueSoft Sp. z o.o."),
-                () -> Assertions.assertThat(registeredOffer.getSalary()).isEqualTo("7 000 – 9 000 PLN"),
-                () -> Assertions.assertThat(registeredOffer.getOfferUrl()).isEqualTo("https://nofluffjobs.com/pl/job/junior-java-developer-bluesoft-remote-hfuanrre"),
+                () -> Assertions.assertThat(registeredOffer.id()).isEqualTo("1000"),
+                () -> Assertions.assertThat(registeredOffer.title()).isEqualTo("Junior Java Developer"),
+                () -> Assertions.assertThat(registeredOffer.company()).isEqualTo("BlueSoft Sp. z o.o."),
+                () -> Assertions.assertThat(registeredOffer.salary()).isEqualTo("7 000 – 9 000 PLN"),
+                () -> Assertions.assertThat(registeredOffer.offerUrl()).isEqualTo("https://nofluffjobs.com/pl/job/junior-java-developer-bluesoft-remote-hfuanrre"),
                 () -> Assertions.assertThat(offerRepository.findAll()).hasSize(1)
         );
 
@@ -337,16 +316,16 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
         OfferDto registeredOffer1 = offerFacade.register(offerDto1);
         OfferDto registeredOffer2 = offerFacade.register(offerDto2);
         assertAll(
-                () -> Assertions.assertThat(registeredOffer1.getId()).isEqualTo("1000"),
-                () -> Assertions.assertThat(registeredOffer1.getTitle()).isEqualTo("Junior Java Developer"),
-                () -> Assertions.assertThat(registeredOffer1.getCompany()).isEqualTo("BlueSoft Sp. z o.o."),
-                () -> Assertions.assertThat(registeredOffer1.getSalary()).isEqualTo("7 000 – 9 000 PLN"),
-                () -> Assertions.assertThat(registeredOffer1.getOfferUrl()).isEqualTo("https://nofluffjobs.com/pl/job/junior-java-developer-bluesoft-remote-hfuanrre"),
-                () -> Assertions.assertThat(registeredOffer2.getId()).isEqualTo("2000"),
-                () -> Assertions.assertThat(registeredOffer2.getTitle()).isEqualTo("Java (CMS) Developer"),
-                () -> Assertions.assertThat(registeredOffer2.getCompany()).isEqualTo("Efigence SA"),
-                () -> Assertions.assertThat(registeredOffer2.getSalary()).isEqualTo("16 000 – 18 000 PLN"),
-                () -> Assertions.assertThat(registeredOffer2.getOfferUrl()).isEqualTo("https://nofluffjobs.com/pl/job/java-cms-developer-efigence-warszawa-b4qs8loh"),
+                () -> Assertions.assertThat(registeredOffer1.id()).isEqualTo("1000"),
+                () -> Assertions.assertThat(registeredOffer1.title()).isEqualTo("Junior Java Developer"),
+                () -> Assertions.assertThat(registeredOffer1.company()).isEqualTo("BlueSoft Sp. z o.o."),
+                () -> Assertions.assertThat(registeredOffer1.salary()).isEqualTo("7 000 – 9 000 PLN"),
+                () -> Assertions.assertThat(registeredOffer1.offerUrl()).isEqualTo("https://nofluffjobs.com/pl/job/junior-java-developer-bluesoft-remote-hfuanrre"),
+                () -> Assertions.assertThat(registeredOffer2.id()).isEqualTo("2000"),
+                () -> Assertions.assertThat(registeredOffer2.title()).isEqualTo("Java (CMS) Developer"),
+                () -> Assertions.assertThat(registeredOffer2.company()).isEqualTo("Efigence SA"),
+                () -> Assertions.assertThat(registeredOffer2.salary()).isEqualTo("16 000 – 18 000 PLN"),
+                () -> Assertions.assertThat(registeredOffer2.offerUrl()).isEqualTo("https://nofluffjobs.com/pl/job/java-cms-developer-efigence-warszawa-b4qs8loh"),
                 () -> Assertions.assertThat(offerRepository.findAll()).hasSize(2)
         );
 
@@ -392,10 +371,10 @@ class JobOfferResponseIntegrationTest extends BaseIntegrationTest implements Sam
         assertAll(
                 () -> Assertions.assertThat(offerRepository.findAll()).hasSize(4),
                 () -> Assertions.assertThat(offersFromExternalServerResponse).hasSize(4),
-                () -> Assertions.assertThat(offerDto1.getId()).isEqualTo("1000"),
-                () -> Assertions.assertThat(offerDto2.getId()).isEqualTo("2000"),
-                () -> Assertions.assertThat(offerDto3.getId()).isEqualTo("3000"),
-                () -> Assertions.assertThat(offerDto4.getId()).isEqualTo("4000"),
+                () -> Assertions.assertThat(offerDto1.id()).isEqualTo("1000"),
+                () -> Assertions.assertThat(offerDto2.id()).isEqualTo("2000"),
+                () -> Assertions.assertThat(offerDto3.id()).isEqualTo("3000"),
+                () -> Assertions.assertThat(offerDto4.id()).isEqualTo("4000"),
                 () -> Mockito.verify(offerFacade, times(1)).fetchAllOffersAndSaveAllIfNotExist()
         );
     }
