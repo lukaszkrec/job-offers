@@ -1,5 +1,6 @@
 package org.joboffer;
 
+import org.joboffer.infrastructure.cache.RedisConfigurationProperties;
 import org.joboffer.infrastructure.offer.http.HttpClientConnectionConfigurationProperties;
 import org.joboffer.infrastructure.security.jwt.JwtConfigurationProperties;
 import org.springframework.boot.SpringApplication;
@@ -9,7 +10,13 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableMongoRepositories
-@EnableConfigurationProperties({HttpClientConnectionConfigurationProperties.class, JwtConfigurationProperties.class})
+@EnableConfigurationProperties(
+        {
+                HttpClientConnectionConfigurationProperties.class,
+                JwtConfigurationProperties.class,
+                RedisConfigurationProperties.class
+        }
+)
 public class JobOfferSpringBootApplication {
 
     public static void main(String[] args) {

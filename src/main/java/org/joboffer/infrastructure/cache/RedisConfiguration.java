@@ -1,5 +1,6 @@
 package org.joboffer.infrastructure.cache;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.EnableCaching;
@@ -14,13 +15,18 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @EnableCaching
 @Configuration
+@AllArgsConstructor
 @ConditionalOnProperty(value = "spring.cache.type", havingValue = "redis")
 class RedisConfiguration {
 
+    private final RedisConfigurationProperties redisConfigurationProperties;
+
     @Bean
-    public JedisConnectionFactory redisConnectionFactory(@Value("${spring.redis.host}") String hostname,
-                                                         @Value("${spring.redis.port}") int port) {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(hostname, port);
+    public JedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(
+                redisConfigurationProperties.host(),
+                redisConfigurationProperties.port()
+        );
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 
